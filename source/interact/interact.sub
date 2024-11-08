@@ -1,0 +1,25 @@
+# test.sub
+
+universe = vanilla
+
+# Direct log, standard error & output streams to files
+log = /home/$(USER)/logs/test/interactive_$(Cluster).log
+error = /home/$(USER)/logs/test/interactive_$(Cluster).err
+output = /home/$(USER)/logs/test/interactive_$(Cluster).out
+
+# IMPORTANT! Require execute servers that have Staging:
+Requirements = (TARGET.HasCHTCStaging == TRUE)
+
+transfer_input_files = utils
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+request_memory = $(memory)
+request_disk = $(disk)
+
+if !defined request_cpus
+   request_cpus = 1
+endif
+
+queue
