@@ -6,6 +6,8 @@
 #   Usage:       ./hypro.sh <SITE> <ISODATE> <LINE> [<PROJECT>]
 #   Author:      Brendan Heberlein
 #   Date:        2024-11-20
+#   Notes:       Define GRID_ROTATION environment variable to configure
+#                image orientation (default is north-up).
 # : ------------------------------------------------------------------------- :
 
 # :---------- DEFINE VARIABLES ----------: #
@@ -77,6 +79,14 @@ source utils/hypro/config.sh
 resolve_config || exit 1
 # Copy over JSON configuration file (strip out leading directories if present)
 cp $CONFIG_DIR/$CONFIG data/"${CONFIG##*/}"
+
+# If grid rotation is passed in as an environment variable, update the configuration file
+if [ -n "${GRID_ROTATION+x}" ]; then
+  echo "Updating processing grid rotation: $GRID_ROTATION"
+  mv data/"${CONFIG##*/}" data/"${CONFIG##*/}.tmp"
+  jq -r --arg GRID_ROTATION "$GRID_ROTATION" '.Geometric_Correction.rotation = $GRID_ROTATION' data/"${CONFIG##*/}.tmp" > data/"${CONFIG##*/}"
+  rm data/"${CONFIG##*/}.tmp"
+fi
 
 # :----------- RUN PROCESSING -----------: #
 
