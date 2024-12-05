@@ -31,6 +31,7 @@ FLIGHTLINE=LOEW_20230621_01
 Additionally, certain domain names & filepaths have been abbreviated:
 
 ```shell
+CHTC_GROUP=townsend_airborne
 FARNSWORTH=farnsworth.russell.wisc.edu
 TRANSFER=transfer.chtc.wisc.edu
 STAGING=/staging/groups/$CHTC_GROUP
@@ -108,7 +109,7 @@ For CHTC processing, some additional files com into play:
 
 ## DEM Processing
 
-A raster DEM or DSM is needed for best results when processing imagery in HyPro. The DEM file is one of the important data inputs, and should be placed on Staging in the `townsend_hyspex` space, within `data/surface`. Note that the configuration JSON file must have the correct filepath, which should be an absolute path pointing to Staging (i.e. to a file within `$STAGING/data/surface`).
+A raster DEM or DSM is needed for best results when processing imagery in HyPro. The DEM file is one of the important data inputs, and should be placed on Staging in the `townsend_airborne` space, within `data/surface`. Note that the configuration JSON file must have the correct filepath, which should be an absolute path pointing to Staging (i.e. to a file within `$STAGING/data/surface`).
 
 - DEM should be a regularly-gridded raster in **ENVI format**, with the grid oriented **north-up**.
 - Horizontal coordinate system is **WGS84/UTM**, usually zone **16N** or **15N** (**EPSG:32616** or **32615**; units are **meters**).
@@ -200,7 +201,7 @@ rclone copy -P "remote:..."
 - Connect to the **submit server** to submit jobs.
   
   - We have our own dedicated submit server hardware at **`townsend-submit.chtc.wisc.edu`**.
-    - *Let CHTC know in your application form that you will need access to `townsend-submit` & our `townsend_hyspex` group allocation on Staging.*
+    - *Let CHTC know in your application form that you will need access to `townsend-submit` & our `townsend_airborne` group allocation on Staging.*
   - CHTC has general-use submit servers at `ap2001.chtc.wisc.edu` & `ap2002.chtc.wisc.edu`.
     - We don't usually use these, but they can serve as a backup if `townsend-submit` is having issues or otherwise needing maintenance.
     - *If you have only used `townsend-submit` in the past, you may need to request access.*
