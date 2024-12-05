@@ -14,7 +14,7 @@
 
 # User
 CHTC_USER=$(id -u -n)
-GROUP=townsend_group
+GROUP=townsend_airborne
 # File storage
 USER_STAGING=/staging/$CHTC_USER
 GROUP_STAGING=/staging/groups/$GROUP
