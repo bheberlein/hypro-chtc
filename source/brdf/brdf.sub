@@ -1,0 +1,23 @@
+# brdf.sub
+universe = vanilla
+
+# Specify executable
+executable = source/brdf/brdf.sh
+arguments = $(session)
+
+# Set files to capture HTCondor log & standard error stream
+logs_directory = /home/$ENV(USER)/logs/brdf/$(session)
+log = $(logs_directory)/BRDF_$(Cluster).log
+error = $(logs_directory)/BRDF_$(Cluster).err
+
+# Copy over bash utilities to worker node
+transfer_input_files = utils
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+request_cpus = $(count)
+request_disk = $(disk)
+request_memory = $(memory)
+
+queue session, count, disk, memory from $(joblist)
