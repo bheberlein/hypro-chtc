@@ -1,0 +1,13 @@
+name: htconda-brdf
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - gdal
+  - h5py
+  - matplotlib
+  - numpy
+  - pandas
+  - ray-default
+  - scipy
+  - toml
