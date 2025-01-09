@@ -13,11 +13,11 @@ TRANSFER=transfer.chtc.wisc.edu
 REMOTE=$USER@$TRANSFER:$STAGING
 
 # Create directory structure
-mkdir -p $STAGING/{config,joblist}
+mkdir -p $STAGING/{config,joblist,linesdict}
 mkdir -p $STAGING/data/{atmosphere,basemap,geometry,processed,quicklook,raw,surface}
 mkdir -p $STAGING/source/{environment,packages}
 # Allow group members to write to key folders
-chmod 2775 $STAGING/{config,joblist}
+chmod 2775 $STAGING/{config,joblist,linesdict}
 chmod 2775 $STAGING/data/{processed,quicklook,raw,surface}
 
 # # Copy atmospheric lookup tables
