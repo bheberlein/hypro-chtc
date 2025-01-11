@@ -11,8 +11,8 @@ boost () {
   # Get boosting factors
   local disk_boost memory_boost
   disk_boost=${2:-1.5}
-  memory_boost=${3:-disk_boost}
-  # Calculated updated resource requests
+  memory_boost=${3:-$disk_boost}
+  # Calculate updated resource requests
   local disk_updated memory_updated updated_request
   updated_request=""
   if (( $(echo "$disk_boost > 1" | bc -l) )); then
@@ -30,4 +30,13 @@ boost () {
   echo "condor_qedit $1 $(echo $updated_request | xargs)"
   # Edit job resource requests & release
   condor_qedit ${1}$updated_request && condor_release $1
+}
+
+boost_all () {
+  # Find IDs for all held jobs
+  jobs=$(condor_q --held -format '%d' ClusterId -format '.%03d ' ProcId)
+  # Boost each job
+  for job in $jobs; do
+    boost $job $@
+  done
 }
