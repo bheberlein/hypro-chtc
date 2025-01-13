@@ -99,13 +99,9 @@ def parse_resource_column(jobs, column):
 def make_readable(df):
     """Drop accessory resource columns."""
     column_groups = ('memory_request', 'memory_usage', 'disk_request', 'disk_usage')
-    return df.drop(columns=[
-        col for grp in column_groups
-        for col in (f'{grp}_decimal', f'{grp}_unit', f'{grp}_bytes')
-    ]).rename(columns={
-        f'{grp}_readable': grp
-        for grp in column_groups
-    })
+    columns = [col for grp in column_groups for col in (f'{grp}_decimal', f'{grp}_unit', f'{grp}_bytes')]
+    readable_df = df.drop(columns=columns).rename(columns={f'{grp}_readable': grp for grp in column_groups})
+    return readable_df
 
 
 def parse_condor_status(status):
@@ -126,8 +122,7 @@ def parse_condor_status(status):
 def process_job_status(jobs):
     
     # TODO: Add column for time of last status update
-    
-    # NOTE: This is specific to HyPro jobs, for which the `command` field will start with `hypro.sh `
+    # TODO: This is specific to HyPro jobs, for which the `command` field will start with `hypro.sh `
     
     arguments = jobs.command.str[9:].str.split(expand=True)
     arguments.columns = ['site', 'isodate', 'image']
