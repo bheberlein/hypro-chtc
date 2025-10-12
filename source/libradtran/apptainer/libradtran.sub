@@ -1,0 +1,31 @@
+# libradtran.sub
+universe = container
+
+# NOTE: Files in shared Staging spaces cannot be transferred with `osdf:///` protocol; use `file:///`
+staging = /staging/groups/townsend_airborne
+output_directory = $(staging)/data/lut/raw
+
+# IMPORTANT! Require execute servers that have access to Staging
+requirements = (TARGET.HasCHTCStaging == TRUE)
+
+# Specify container
+container_image = file://$(staging)/source/libradtran/libradtran.sif
+
+# Inputs & outputs
+base = $Fn(inp)
+input = $(inp)
+output = $(output_directory)/$(base).out
+error = $(output_directory)/$(base).err
+
+# HTCondor log
+log = $(HOME)/logs/lut/$(base).log
+
+# Automatic file transfer handling
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+request_cpus = 1
+request_memory = 2GB
+request_disk = 4GB
+
+queue

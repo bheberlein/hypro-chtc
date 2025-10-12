@@ -1,0 +1,21 @@
+# build.sub
+# For building an Apptainer container
+
+# NOTE: CHTC requires that you only build containers while in an INTERACTIVE build job
+
+universe = vanilla
+log = libradtran-build.log
+
+requirements = (HasCHTCStaging == true)
+
+source_directory = $Fp(SUBMIT_FILE)
+transfer_input_files = $(source_directory)libradtran.def, \
+                       $(source_directory)metadata.sh, \
+                       $(source_directory)version.sh
+
++IsBuildJob = true
+request_cpus = 4
+request_memory = 16GB
+request_disk = 16GB
+
+queue

@@ -1,0 +1,122 @@
+Bootstrap: docker
+From: rockylinux:9-minimal
+
+%labels
+    Author Brendan Heberlein
+    Organization UW Environmental Spectroscopy Laboratory
+    Version v1.0
+    Description Lightweight container to deploy libRadtran radiative transfer modeling software.
+
+%help
+    This container provides a lightweight libRadtran build, compiled from source on Rocky Linux 9
+    minimal, with core dependencies only.
+
+    Usage:
+        apptainer exec libRadtran.sif uvspec < input.txt > output.txt
+
+%environment
+    export PATH=/opt/libradtran/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/local/lib:$LD_LIBRARY_PATH
+
+%post
+
+    export PATH=/opt/local/bin:$PATH
+    export LD_LIBRARY_PATH="/opt/local/lib:$LD_LIBRARY_PATH"
+    export CPPFLAGS="-I/opt/local/include"
+    export LDFLAGS="-L/opt/local/lib"
+
+    # --- Core tools and compilers ---
+
+    microdnf install -y epel-release
+    microdnf install -y \
+        gcc gcc-c++ gcc-gfortran m4 make flex wget perl tar gzip unzip \
+        libcurl-devel zlib-devel bzip2-devel xz-devel libxml2-devel \
+        ca-certificates which \
+        && microdnf clean all
+
+    # --- Build and install GSL ---
+
+    cd /tmp
+    wget https://mirror.ibcp.fr/pub/gnu/gsl/gsl-latest.tar.gz
+    tar -xzf gsl-latest.tar.gz --transform s/^gsl-[0-9]\.[0-9]/gsl/ && cd gsl
+    ./configure --prefix=/opt/local
+    make -j$(nproc)
+    make install
+    cd /tmp && rm -rf gsl gsl-latest.tar.gz
+
+    # --- Build and install HDF5 ---
+
+    HDF5_VERSION=1.14.6
+    HDF5_PACKAGE=hdf5-$HDF5_VERSION
+    HDF5_MAJOR_VERSION=${HDF5_VERSION%.*}
+    HDF5_ARCHIVE=v${HDF5_MAJOR_VERSION//./_}/v${HDF5_VERSION//./_}
+
+    wget https://support.hdfgroup.org/releases/hdf5/$HDF5_ARCHIVE/downloads/$HDF5_PACKAGE.tar.gz
+    tar xzf $HDF5_PACKAGE.tar.gz && cd $HDF5_PACKAGE
+    ./configure --prefix=/opt/local --enable-fortran --enable-hl
+    make -j$(nproc)
+    make install
+    cd /tmp && rm -rf $HDF5_PACKAGE $HDF5_PACKAGE.tar.gz
+
+    # --- Build and install NetCDF C libraries ---
+
+    UCAR=https://downloads.unidata.ucar.edu
+    NETCDFC_VERSION=4.9.2
+    NETCDFC_PACKAGE=netcdf-c-$NETCDFC_VERSION
+
+    wget $UCAR/netcdf-c/$NETCDFC_VERSION/$NETCDFC_PACKAGE.tar.gz
+    tar -xzf $NETCDFC_PACKAGE.tar.gz && cd $NETCDFC_PACKAGE
+    ./configure --prefix=/opt/local
+    make -j$(nproc)
+    make install
+    cd /tmp && rm -rf $NETCDFC_PACKAGE $NETCDFC_PACKAGE.tar.gz
+
+    # --- Build and install NetCDF FORTRAN libraries ---
+
+    NETCDFF_VERSION=4.6.2
+    NETCDFF_PACKAGE=netcdf-fortran-$NETCDFF_VERSION
+
+    wget $UCAR/netcdf-fortran/$NETCDFF_VERSION/$NETCDFF_PACKAGE.tar.gz
+    tar xzf $NETCDFF_PACKAGE.tar.gz && cd $NETCDFF_PACKAGE
+    ./configure --prefix=/opt/local
+    make -j$(nproc)
+    make install
+    cd /tmp && rm -rf $NETCDFF_PACKAGE $NETCDFF_PACKAGE.tar.gz
+
+    # --- Build libRadtran ---
+    LIBRADTRAN_PACKAGE=libRadtran-2.0.6
+
+    cd /opt
+    wget https://www.libradtran.org/download/$LIBRADTRAN_PACKAGE.tar.gz
+    tar -xzf $LIBRADTRAN_PACKAGE.tar.gz --transform s/^$LIBRADTRAN_PACKAGE/libradtran/ && rm $LIBRADTRAN_PACKAGE.tar.gz
+    cd libradtran
+    ./configure \
+      --prefix=/opt/libradtran \
+      --with-netcdf=/opt/local/include \
+      --with-hdf5=/opt/local/include \
+      --with-gsl=/opt/local/include
+    make
+    make check
+
+    mkdir -p /opt/libradtran/data
+    cd /opt/libradtran
+
+    # --- Download full resolution solar flux ---
+
+    SOLAR_FLUX_PACKAGE=kurudz_full.tar.gz
+    SOLAR_FLUX_URL='https://www.libradtran.org/lib/exe/fetch.php?media=download:'"$SOLAR_FLUX_PACKAGE"
+
+    wget $SOLAR_FLUX_URL -O $SOLAR_FLUX_PACKAGE
+    tar -xzf $SOLAR_FLUX_PACKAGE && rm $SOLAR_FLUX_PACKAGE
+
+    # --- Download REPTRAN absorption parameters (optional) ---
+
+    REPTRAN_PACKAGE=reptran_2024_all.tar.gz
+    REPTRAN_URL='https://www.meteo.physik.uni-muenchen.de/~libradtran/lib/exe/fetch.php?media=download:'"$REPTRAN_PACKAGE"
+
+    wget $REPTRAN_URL -O $REPTRAN_PACKAGE
+    tar -xzf $REPTRAN_PACKAGE && rm $REPTRAN_PACKAGE
+
+%runscript
+    cd /opt/libradtran/bin
+    exec uvspec "$@"
