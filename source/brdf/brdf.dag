@@ -1,0 +1,12 @@
+# brdf.dag
+
+# Batch reflectance processing is queued from the joblist file
+JOB HYPRO ../hypro/hypro.sub
+VARS HYPRO joblist="$(joblist)"
+
+# BRDF correction
+JOB BRDF brdf.sub
+VARS BRDF ...
+
+# BRDF correction runs after HyPro
+PARENT HYPRO CHILD BRDF
