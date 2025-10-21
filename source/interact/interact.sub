@@ -3,9 +3,9 @@
 universe = vanilla
 
 # Direct log, standard error & output streams to files
-log = /home/$(USER)/logs/test/interactive_$(Cluster).log
-error = /home/$(USER)/logs/test/interactive_$(Cluster).err
-output = /home/$(USER)/logs/test/interactive_$(Cluster).out
+log = /home/$ENV(USER)/logs/test/interactive_$(Cluster).log
+error = /home/$ENV(USER)/logs/test/interactive_$(Cluster).err
+output = /home/$ENV(USER)/logs/test/interactive_$(Cluster).out
 
 # IMPORTANT! Require execute servers that have access to Staging
 requirements = (TARGET.HasCHTCStaging == TRUE)
