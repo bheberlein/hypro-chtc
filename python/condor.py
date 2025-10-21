@@ -17,7 +17,8 @@ CONDOR_JOB_PATTERN = re.compile(r'^\s*' + r'\s+'.join((
 
 # Formatted column labels from `condor_q -pr usage.cpf`
 CONDOR_JOB_COLUMNS = [
-    'job_id', 'submitted', 'runtime', 'status', 'disk_request', 'disk_usage',
+    'job_id', 'submitted', 'runtime', 'status',
+    'disk_request', 'disk_usage',
     'memory_request', 'memory_usage', 'command',
 ]
 
@@ -27,6 +28,8 @@ def get_factors(lines):
     
     Returns
     -------
+    job_ids : tuple[str]
+        ...
     disk_factors, memory_factors : tuple[float]
         ...
     
@@ -35,14 +38,14 @@ def get_factors(lines):
     
     .. code-block:: text
        
-       # boost_all 1.0 1.2
+       # boost_all 1 1.2
        6382.004
        6382.049
        6382.099
        6382.106
        6382.118
        
-       # boost_all 1.0 1.2
+       # boost_all 1 1.2
        6382.076
        6382.107
     
@@ -110,6 +113,8 @@ def parse_condor_status(status):
     # Parse lines for each job
     lines = [line for line in status.split('\n') if line.strip()]
     
+    # TODO: Some columns (e.g. disk or memory usage) may occasionally be empty; this will fail
+    
     jobs = pd.DataFrame(
         # NOTE: Skip the header & footer rows
         data=[CONDOR_JOB_PATTERN.match(line).groups() for line in lines[1:-1]],
@@ -131,7 +136,7 @@ def process_job_status(jobs):
     
     jobs.loc[jobs.command.str[:8] == 'hypro.sh', 'job_type'] = 'HyPro'
     
-    jobs['status'] = jobs.status.replace({'R': 'ACTIVE', 'I': 'IDLE', 'H': 'HELD'})
+    jobs['status'] = jobs.status.replace({'R': 'RUNNING', 'I': 'IDLE', 'H': 'HELD'})
     
     # Restructure
     jobs = pd.concat([
