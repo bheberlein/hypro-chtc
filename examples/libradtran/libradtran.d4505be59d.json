@@ -1,0 +1,26 @@
+{
+  "software": {
+    "metadata": {
+      "type": "container::apptainer",
+      "file": "libradtran.sif",
+      "build_date": "2025-10-22",
+      "checksum": "d4505be59d81896ceb468dc14dcc1841e31512c2ef9ef4cd0846f11871bb3ba3",
+      "source": {
+        "file": "libradtran.def",
+        "checksum": "a8b327ffd9ffc84bffe89855684ca7604ab7f1f88e6e59f5c7940eca55521d87"
+      }
+    },
+    "environment": {
+      "os": "Rocky Linux 9.3 (Blue Onyx)",
+      "compiler": "GCC"
+    },
+    "version": {
+      "gcc": "11.5.0",
+      "gsl": "2.8",
+      "hdf5": "1.14.6",
+      "libradtran": "2.0.6-MYSTIC",
+      "netcdf_c": "4.9.2",
+      "netcdf_fortran": "4.6.2"
+    }
+  }
+}
