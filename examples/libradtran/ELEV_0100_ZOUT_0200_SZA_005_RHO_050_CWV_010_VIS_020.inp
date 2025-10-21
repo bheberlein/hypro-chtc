@@ -1,0 +1,20 @@
+wavelength 400 2500
+mol_abs_param reptran fine
+umu 0.766044443118978 0.8660254037844387 0.9063077870366499 0.9396926207859084 0.9659258262890683 0.984807753012208 0.9961946980917455 1.0
+phi 0 15 30 45 60 75 90 105 120 135 150 165 180
+sza 5
+phi0 0
+zout 0.2
+altitude 0.1
+atmosphere_file midlatitude_summer
+mol_modify O3 331 DU
+mol_modify H2O 10 MM
+aerosol_default
+aerosol_visibility 20
+crs_model rayleigh bodhaine
+rte_solver disort
+albedo 0.5
+source solar ../data/solar_flux/kurudz_0.1nm.dat
+pseudospherical
+output_user uu
+quiet
