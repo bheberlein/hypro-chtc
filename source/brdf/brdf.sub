@@ -20,4 +20,8 @@ request_cpus = $(count)
 request_disk = $(disk)
 request_memory = $(memory)
 
+if defined project
+   arguments=$(arguments) $(project)
+endif
+
 queue session, count, disk, memory from $(joblist)
