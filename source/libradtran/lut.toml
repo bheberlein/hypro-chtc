@@ -1,0 +1,85 @@
+[metadata]
+description = "Radiative transfer lookup table for at-sensor radiance."
+atmosphere_model = "midlatitude_summer"
+aerosol_model = "default"
+source_spectrum = "kurudz_0.1nm.dat"
+rt_model = 'libRadtran 2.0.6 + REPTRAN'
+rt_solver = "disort pseudospherical"
+rayleigh_cross_section = "bodhaine"
+long_description = """\
+This lookup table provides at-sensor radiance at high spectral resolution, \
+as a function of surface reflectance, atmospheric parameters, and observation \
+geometry. The data are modeled with libRadtran.\
+"""
+
+[variables.radiance]
+long_name = "At-Sensor Radiance"
+units = "mW / sr / m^2 / nm"
+standard_name = "radiance_at_sensor"
+comment = """\
+Predicted radiance at sensor aperture, in units of watts per steradian \
+per square meter per nanometer.\
+"""
+
+[variables.RHO]
+long_name = "Surface Reflectance"
+units = "1"
+standard_name = "surface_reflectance"
+comment = "Spectral surface reflectance, unitless proportion."
+
+[variables.WVC]
+long_name = "Water Vapor Column"
+units = "kg / m^2"
+standard_name = "water_vapor"
+comment = """\
+Atmospheric vapor column, i.e. total precipitable water, in kilograms \
+per square meter (nominally equivalent to millimeters of depth).\
+"""
+
+[variables.VIS]
+long_name = "Aerosol Visibility"
+units = "km"
+standard_name = "aerosol_visibility"
+comment = "Atmospheric aerosol horizontal visibility, in kilometers."
+
+[variables.VZA]
+long_name = "View Zenith Angle"
+units = "degree"
+standard_name = "view_zenith"
+comment = "Sensor view zenith angle, in degrees."
+
+[variables.RAA]
+long_name = "Relative Azimuth Angle"
+units = "degree"
+standard_name = "relative_azimuth"
+comment = "Sun-to-sensor relative azimuth angle, in degrees."
+
+[variables.WAVE]
+long_name = "Wavelength"
+units = "nm"
+standard_name = "wavelength"
+comment = "Spectral wavelength, in nanometers."
+
+[variables.ELEV]
+long_name = "Surface Elevation"
+units = "m"
+standard_name = "surface_elevation"
+comment = "Sensor elevation above mean sea level, in meters."
+
+[variables.ZOUT]
+long_name = "Sensor Altitude"
+units = "m"
+standard_name = "sensor_altitude"
+comment = "Sensor altitude above surface, in meters."
+
+[variables.SZA]
+long_name = "Solar Zenith Angle"
+units = "degree"
+standard_name = "solar_zenith"
+comment = "Solar zenith angle, in degrees."
+
+[variables.SAA]
+long_name = "Solar Azimuth Angle"
+units = "degree"
+standard_name = "solar_azimuth"
+comment = "Solar azimuth angle, in degrees."
