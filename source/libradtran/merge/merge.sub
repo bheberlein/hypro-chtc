@@ -1,0 +1,28 @@
+# merge.sub
+universe = vanilla
+
+# IMPORTANT! Require execute servers that have access to Staging
+requirements = (TARGET.OpSysMajorVer >= 8) && (TARGET.HasCHTCStaging == TRUE)
+
+chtc_repo = $ENV(HOME)/git/hypro-chtc
+
+# Specify executable
+executable = $(chtc_repo)/source/libradtran/merge/merge.sh
+arguments = $(tile)
+
+# Set files to capture HTCondor log & standard error stream
+log = logs/lut/merge_$(tile)_$(Cluster).log
+error = logs/lut/merge_$(tile)_$(Cluster).err
+output = logs/lut/merge_$(tile)_$(Cluster).out
+
+# Copy over bash utilities to worker node
+transfer_input_files = $(chtc_repo)/utils
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+request_cpus = 1
+request_disk = 15GB
+request_memory = 3GB
+
+queue
