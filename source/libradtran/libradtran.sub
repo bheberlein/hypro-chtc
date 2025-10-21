@@ -1,0 +1,9 @@
+# libradtran.sub
+universe = vanilla
+
+# Specify executable
+executable = source/libradtran/libradtran.sh
+# arguments =
+
+# TODO: We might want to constrain system specs (e.g. CPU architecture, OS version, ...) or list dependencies
+# TODO: Requires `gfortran`, `flex`, `perl`
