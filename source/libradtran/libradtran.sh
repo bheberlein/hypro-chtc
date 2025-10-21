@@ -9,10 +9,28 @@
 # : ------------------------------------------------------------------------- :
 
 STAGING=/staging/groups/townsend_airborne
+LOCAL=$(pwd)
 
-cp $STAGING/source/packages/libradtran.tar.gz ./
+INP_FILE=$1
+OUT_FILE=${INP_FILE%.*}.out
+ERR_FILE=${INP_FILE%.*}.err
+
+echo "INP file: $INP_FILE"
+echo "OUT file: $OUT_FILE"
+
+cp $STAGING/source/libradtran/libradtran.tar.gz ./
 tar -xzf libradtran.tar.gz
 
-export LD_LIBRARY_PATH=$HOME/compiled/gsl/lib/
+export LD_LIBRARY_PATH=$LOCAL/compiled/gsl/lib/
 
-alias uvspec="$HOME/software/libradtran/bin/uvspec"
+alias uvspec="$LOCAL/software/libradtran/bin/uvspec"
+
+echo "Running libRadtran..."
+(uvspec < $INP_FILE > $OUT_FILE) >& $ERR_FILE
+echo "...Done!"
+
+cp $OUT_FILE $STAGING/data/processed/lut/
+
+rm -r ./*
+
+exit 0
