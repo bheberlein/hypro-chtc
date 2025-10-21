@@ -1,0 +1,25 @@
+# modtran.sub
+universe = vanilla
+
+# Specify executable
+executable = source/modtran/modtran.sh
+# arguments =
+
+concurrency_limits = MODTRAN:4
+
+# Set files to capture HTCondor log & standard error stream
+logs_directory = /home/$ENV(USER)/logs/modtran
+log = $(logs_directory)/MODTRAN_$(Cluster).log
+error = $(logs_directory)/MODTRAN_$(Cluster).err
+
+# Copy over bash utilities to worker node
+transfer_input_files = utils
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+request_cpus = 1
+request_disk =
+request_memory =
+
+queue
