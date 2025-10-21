@@ -16,3 +16,5 @@ TMP=/mnt/farnsworth/Enspec/users/bheberlein/modtran
 # Extracts to ...
 7z x $TMP/$PACKAGE_NAME.7z.001 -o/mnt/farnsworth/Enspec/users/bheberlein/modtran/zip
 
+# Package everything into modtran.tar.gz
+# Move onto group staging
