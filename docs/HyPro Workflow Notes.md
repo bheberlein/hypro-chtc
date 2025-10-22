@@ -4,8 +4,6 @@
 
 HyPro is a Python package for processing raw imaging spectrometer data with a focus on airborne applications.
 
-
-
 ## Notes
 
 ### Caution in the Shell
@@ -41,24 +39,22 @@ TRANSFER=transfer.chtc.wisc.edu
 STAGING=/staging/groups/$CHTC_GROUP
 ```
 
-
-
 ## Processing Inputs
 
 ### Primary Data Inputs
 
 - Semi-permanent datasets kept on CHTC Staging
-  
+
   - **Atmospheric lookup tables**
   - **Surface elevation model** (i.e. DEM or DSM)
-  
+
 - Included in the `hypro*.tar.gz` file pulled by the jobs
-  
+
   - **Sensor calibration files**
   - **Sensor geometric model**
-  
+
 - Included in the raw data input `*.tar.gz` files pulled by the jobs
-  
+
   - **Raw DN images** & header files
   - **Navigation data** (camera positions & orientations for each frame in the image)
 
@@ -67,59 +63,55 @@ STAGING=/staging/groups/$CHTC_GROUP
 For CHTC processing, some additional files com into play:
 
 - Packages
-  
+
   - HyPro (Python code for reflectance processing)
   - Conda (Python environment with dependencies installed)
 
 - Support files
-  
+
   - Job lists
   - Config files
-
-
 
 ## Running Processing
 
 ### Overview
 
 - **Running processing with HyPro**
-  
+
   - You can use HyPro to process raw imaging spectrometer DN images to surface reflectance images by calling the main workflow
-    
+
     ```shell
     python $src/hypro/workflow/main.py $config
     ```
-    
+
     where `$src` is the HyPro source code directory (usu. `src` within top-level directory of the HyPro repository) and `$config` is the path to the processing configuration JSON file).
-  
+
   - A **processing configuration JSON file** (*"config file"*) is required to run HyPro in this manner.
     - This is a JSON file that specifies processing parameters (e.g. input & output directories, pixel size, surface elevation model (DEM or DSM), or region of interest (ROI) polygon).
-  
+
   - When running in a "local" context (i.e. on your own machine vs. on a distributed computing system), this is all that's really needed to run the processing (apart from the various input files, of course, i.e. the `*.hyspex` images, their associated `*.hdr` files, and the navigation data `*.txt` files; the surface elevation model; the calibration files & geometric models for the imaging sensors; and the atmospheric lookup tables).
 
 - **Running HyPro on CHTC**
-  
+
   - The CHTC workflow is ultimately just a wrapper around the local workflow, shown above.
-  
+
   - The CHTC workflow is set up to manage inputs & options to HyPro across a **batch** of flightlines to be processed (jobs to be run).
-    
+
     - The **job list** file lists the **input parameters** & **resource requirements** for each flightline, one per line.
     - Jobs are queued from the job list and, for each job, the executable attempts to locate the **config file** using the flightline parameters (site, date, line number) which are passed as arguments.
-  
+
   - Before the CHTC workflow can be run, the necessary files must be transferred to CHTC servers.
-    
+
     - The **raw data inputs** (`*.tar.gz`) must be transferred to **CHTC Staging** (`$STAGING/data/raw`).
     - The **config file(s)** must be transferred to **CHTC Staging** (`$STAGING/config`). The config files may be defined on a per-site, -session or -flightline basis. These are JSON files that are used to configure the processing options.
     - The **job list** (`*_JobList.txt`) must be transferred to CHTC (e.g. **either** to `$STAGING/joblist` or to your user home on `townsend-ap2000`). The job list is a plaintext file that defines a batch of jobs, providing the flightline parameters (site name, date & flightline number) and resource requirements (disk & memory requests) for each job, one per line.
-  
+
   - Other files that must be available on Staging include:
-    
+
     - Atmospheric lookup tables
     - Surface elevation model (DEM or DSM)
-  
+
   - Once you are set up on a remote machine with the necessary files & code in place, running HyPro on a CHTC worker node is exactly the same as running it locally on your machine! But a lot of additional code is needed to set up the workspace, transfer files, etc. which is all contained in the job executable.
-
-
 
 ## DEM Processing
 
@@ -130,8 +122,6 @@ A raster DEM or DSM is needed for best results when processing imagery in HyPro.
 - Vertical units are **meters**; vertical datum may be ellipsoid- or geoid-referenced.
 - If you need to reproject the data, **don't use nearest-neighbor resampling**! This will distort the surface & create processing artifacts. Use any proper interpolation technique, e.g. linear, cubic or cubic spline.
 
-
-
 ## Reflectance Processing
 
 ### Preprocessing
@@ -139,6 +129,7 @@ A raster DEM or DSM is needed for best results when processing imagery in HyPro.
 Launch the **"CHTC Preprocessing**" Jupyter notebook & run the code cells to do the following:
 
 1. **Query database to find images to be processed.**
+
    - [x] Verify the total number of images/sessions
    - [x] Verify pixel size
    - [x] Verify DEM & vertical datum
@@ -156,15 +147,13 @@ Launch the **"CHTC Preprocessing**" Jupyter notebook & run the code cells to do 
 6. **Generate the processing configuration file (JSON).**
 
   - Config can be generated at the level of **project**, **session** or **flightline**. To be found by the CHTC job script, the config must be named according to the correct naming conventions. The script will look for the following files, in order, and use the first one that it finds.
-    
+
     1. A **flightline-level** config file <u>nested in a session directory</u>, named as **`${SESSION}/${FLIGHTLINE}_Config.json`**.
     2. A **session-level** config, named as **`${SESSION}_Config.json`**.
     3. A **season-level** config, named as **`${SITE}_${YEAR}_Config.json`**.
     4. A **project-level** config, named as **`${PROJECT}_Config.json`**.
-  
+
   - Place in `$STAGING/config`.
-
-
 
 ### Copying files to & from CHTC Staging
 
@@ -229,107 +218,105 @@ rclone copy -P "remote:..."
 
 > **NOTE:** By default, WinSCP will open multiple connections to transfer files in parallel. While this achieves faster transfer speeds overall, it can be annoying when you are repeatedly asked to authenticate with MFA Duo. In *Preferences* > *Transfer* > *Background*, under "background Transfers" uncheck *"Use multiple connections for single transfer"*. This will ensure you only authenticate once per transfer, with some loss of speed.
 
-
-
 ### Submitting jobs on CHTC
 
 - Connect to the **submit server** to submit jobs.
-  
+
   - We have our own dedicated submit server hardware at **`townsend-ap2000.chtc.wisc.edu`**.
-    
+
     - *Let CHTC know in your application form that you will need access to `townsend-ap2000` & our `townsend_airborne` group allocation on Staging.*
-  
+
   - CHTC has general-use submit servers at `ap2001.chtc.wisc.edu` & `ap2002.chtc.wisc.edu`.
-    
+
     - We don't usually use these, but they can serve as a backup if `townsend-ap2000` is having issues or otherwise needing maintenance.
     - *If you have only used `townsend-ap2000` in the past, you may need to request access.*
-  
+
   - Make sure that you have prepared your workspace on the submit server (see [Setting up CHTC Workspace](#setting-up-chtc-workspace), below). This only needs to be done once (though you may occasionally need to pull updates to the `hypro-chtc` repo, i.e. usually `git pull origin dev`).
 
 - Job submission
-  
+
   > ***NOTE:** You should be in a terminal session on `townsend-ap2000` or one of the other submit servers.*
-  
+
   1. **Navigate into the `hypro-chtc` repo directory:**
-  
+
      ```shell
      cd ~/hypro-chtc
      ```
-  
+
   2. **Submit a batch of jobs from a job list text file** (this is how we will usually submit jobs):
-  
+
      ```shell
      condor_submit source/hypro/hypro.sub joblist=$STAGING/joblist/${PROJECT}_JobList.txt
      ```
-  
+
      > **NOTES:** The `joblist` argument needs to be a complete, valid filepath, either relative or absolute. If the path begins with `/`, it will be interpreted relative to the filesystem root (i.e. absolute path); otherwise, it will be interpreted **relative to the working directory** (directory from which `condor_submit` is run).
-  
+
      **Or, submit a single job** from a job list string (can be useful for testing):
-  
+
      ```shell
      condor_submit source/hypro/hypro.sub joblist="(HARS, 20240610, 01, 62GB, 19GB)"
      ```
-  
+
        - Optional command-line arguments:
-         
+
          - Sometimes we may choose to specify `project`
            - *Primarily used to control which config file is selected (see below).*
          - For non-north-up images, specify `rotation`
            - *The rotation angle should be given in **units of degrees**, **CCW positive**.*
-  
+
   3. **Monitor job status using `status` command.**
-  
+
      - Job identifiers
-  
+
          - Each job has a job ID & a cluster (batch) ID.
          - Jobs queued from the same `condor_submit` call will have the same cluster ID.
          - The full job identifier is given first by the cluster ID, then the job ID, separated by a period, i.e. `${cluster_id}.${job_id}`
            - `162573` will match all jobs in cluster 162573.
            - `162573.001` and `162573.1` will match job 1 within cluster 162573.
-  
+
          - Job status under `@` column:
-  
+
              - `I`: idle
              - `R`: running
              - `H`: held
-  
+
   4. **Watch for jobs to be held or removed from the queue.**
-  
+
      - If any jobs are held, you'll need to diagnose the error before resubmitting.
-  
+
          - Use `condor_q` to determine why the job was held:
-           
+
            ```shell
            condor_q $job_id -af HoldReason
            ```
-           
+
            where `$job_id` is a sequence of one or more valid identifiers, separated by space, each of which could be either the full job ID, or just the batch/cluster ID (which will give info for all jobs in the batch).
-           
+
            Alternately, check on all held jobs at once:
-           
+
            ```shell
             condor_q --held -af:j HoldReason
            ```
-           
+
            > ***NOTE:** If querying for multiple jobs, it is valuable to use `-af:j` , which prefixes each line of the output with the corresponding job ID.*
-  
+
          - **Usually the problem is that we did not request sufficient disk or memory.**
-  
+
          - Use the `boost` utility to amend disk & memory requests & resubmit jobs:
-           
+
            ```shell
            # Source the `boost` function from Bash utilities
            source utils/htcondor.sh
            # Boost the disk & memory requests for matching jobs
            boost $job_id $disk_factor $memory_factor
            ```
-           
+
            where `$disk_factor` and `$memory_factor` are scaling factors to be multiplied by the original disk & memory resource requests, respectively. For example, to boost the requested memory by 20% while leaving the disk request unchanged, you can run
-           
+
            ```shell
            boost $job_id 1.0 1.2
            ```
-           
+
            > **NOTES:** Currently there may be some bugs in the `boost` utility. To accomplish this manually,
            >
            > 1. Use `condor_q $job_id -af HoldReason` to determine whether it is the disk or memory request that needs to be increased (or both).
@@ -361,38 +348,36 @@ rclone copy -P "remote:..."
            >    ```
            >
            >    The job will return to the queue in an idle state & wait to be matched with a machine for job execution.
-  
+
            - When a job is removed from the queue, it has finished — it could have completed successfully, but it is also possible that it encountered a silent error.
-             
+
              - Check whether there are `*_Processed.tar.gz` files in the output directory.
              - Sometimes the `.tar.gz` files exist, but are very small — e.g. 0–100 KB. This usually indicates a problem, i.e. the processing failed somehow, even if HTCondor thinks the job completed successfully.
-           
-  
+
            - When a job fails, ...
-           
+
              1. Look in the `*.err` files in `~/logs` on `townsend-ap2000` (open with a text editor).
                 - Look for error messages & stack traces, especially at the end of the log, as an indication of anything that may have gone wrong.
                 - If the reflectance processing completed successfully, there should be a log statement near the end that says *"All flightlines processed!"*. Other errors could still occur after that, but these would most often indicate an issue with e.g. file paths, permissions or quotas on Staging.
-           
-  
+
          - Can use Python code to find failed jobs (`find_failed_jobs.py`) by comparing existing `*.err` logs against existing `*_Processed.tar.gz` files.
-  
+
              - *It's a crude solution, but will work for most cases.*
-  
+
   5. **Resubmit failed jobs as needed until all jobs are complete.**
-  
+
   6. **Copy processed data back to Farnsworth.**
-  
+
      - Processed data from CHTC jobs is written to `$STAGING/data/processed` as `*_Processed.tar.gz`
      - Copy to `$FARNSWORTH/data/processed/airborne` on Farnsworth drive
          - Create directory `Project/year` folders
          - Create nested `refl` folder (all processed data should be copied to here)
          - **NOTE:** Preserve session directory structure when copying back from Staging
-  
+
   7. **Extract processed data archives.**
-  
+
        - Open `refl` directory & right-click to launch Git Bash terminal
-         
+
          ```shell
          # NOTE: There shouldn't be anything else in the directory, just subdirectories & .TAR.GZ files
          for d in *; do
@@ -404,9 +389,6 @@ rclone copy -P "remote:..."
            done
          done
          ```
-  
-
-
 
 ## After Reflectance Processing
 
@@ -417,8 +399,6 @@ Use the **"Inventory Processed Outputs**" Jupyter notebook to verify that all jo
 - Input parameters are the file paths to the `refl` directory & the job list file.
 - Will create a `Processed.csv` table that will help you find any jobs that may not have finished successfully yet
 
-
-
 ### Build QGIS map project
 
 We can build a map project to facilitate easy inspection of the images.
@@ -428,13 +408,13 @@ We can build a map project to facilitate easy inspection of the images.
 1. Open Command Prompt
 
 2. Activate Conda environment
-   
+
    ```shell
    conda activate cole
    ```
 
 3. Launch QGIS from command line
-   
+
    ```shell
    qgis
    ```
@@ -446,8 +426,6 @@ We can build a map project to facilitate easy inspection of the images.
     - `label` is somewhat arbitrary, but would generally be the project name
 
 5. **Save the QGIS project** in the project directory.
-
-
 
 ### Inspect images
 
@@ -461,15 +439,11 @@ As a final check, we should visually assess the processed imagery to see that it
 - Hopefully, overlapping flightlines will also show good alignment.
 - Watch for data gaps, outlier pixels, and things that 'look unusual'.
 
-
-
 ## BRDF Corrections
 
 ### Notes & Background
 
 BRDF corrections will be applied to the processed reflectance images (i.e. run HyPro on CHTC first, then apply BRDF corrections on the reflectance outputs).
-
-
 
 #### File Structure
 
@@ -496,22 +470,20 @@ Prior to running the BRDF workflow, the processed reflectance files should be st
                 └── $FLIGHTLINE
 ```
 
-
-
 ### Determine good images for BRDF fitting
 
 1. Generate a template lines dictionary file.
 
   - Use `generate_lines_dict` function from `enspec.processing.utilities.lines_dict`
-    
+
     - Pass path to `refl` directory as positional argument
-      
+
       ```python
       from enspec.processing.utilities.lines_dict import generate_lines_dict
-      
+
       generate_lines_dict('/data/processed/airborne/Hancock_ARS/2024/refl')
       ```
-    
+
     **NOTE:** The file is generated assuming that all images are suitable to use for fitting BRDF corrections. We want to manually edit this file to remove the numbers of any bad images/flightlines so that they will be withheld during model fitting.
 
 2. **Open QGIS project to inspect imagery.**
@@ -523,7 +495,7 @@ Prior to running the BRDF workflow, the processed reflectance files should be st
   - **NOTE:** Bad images will be withheld during **fitting** of the BRDF correction, but the correction will be **applied** to all of the images.
 
 4. **Bad images** (i.e. > 10% cloud shadow) **should be removed** from the JSON file.
-  
+
   1. Open the JSON in a text editor.
   2. Find the corresponding session in the JSON structure (look for e.g. `"LOEW_20230621": [...],`).
   3. Find the image number in the associated list & remove it. (Make sure to remove the comma as well!)
@@ -531,8 +503,6 @@ Prior to running the BRDF workflow, the processed reflectance files should be st
 5. **Save modified lines dictionary.**
 
 6. Place lines dictionary JSON in the data directory (e.g. `/$PROJECT`).
-
-
 
 ### Run BRDF corrections
 
@@ -576,32 +546,23 @@ Prior to running the BRDF workflow, the processed reflectance files should be st
        >              Original file path for directory: `-d 'Z:/data/processed/airborne/BorealBirds/2024'`
        >              File path for directory when working from Krusty: `-d'/mnt/farnsworth/Enspec/data/processed/airborne/BorealBirds/2024'`
 
-
      - Optionally, specify the lines dictionary file to use by appending to the command above
-       
+
        ```shell
        -f path/to/$PROJECT/$PROJECT_LinesDict.json
        ```
-       
-       By default, (no `-f` flag) the script looks for a file with the same basename as the data directory, e.g. `HARS_2024_LinesDict.json`
-     
 
+       By default, (no `-f` flag) the script looks for a file with the same basename as the data directory, e.g. `HARS_2024_LinesDict.json`
 
      - Use the `--grouped-by-site` option when the project has multiple sites & the session directories are nested inside of the site directories (this adds an extra level of organization in the directory structure).
-     
-
 
      - **Use the `--invert-mask` option to invert the data mask.** This is used when the input data mask is generated with the opposite interpretation as used by HyTools, as is currently the case for HyPro.
-       
+
        ```shell
        python src/enspec/processing/workflows/brdf_batch_process.py -d $data_directory --invert-mask
        ```
 
-
      - Optionally, if you are doing a test run for BRDF corrections and want to submit a single site or one session (assuming you have already generated a test LinesDict.json file) you would also append to the command above by using `-f ${subset}_LinesDict.json`
-
-
-
 
 ## Appendices
 
@@ -629,8 +590,6 @@ Prior to running the BRDF workflow, the processed reflectance files should be st
 - `townsend-ap2000.chtc.wisc.edu`
 - `ap2001.chtc.wisc.edu`
 - `ap2002.chtc.wisc.edu`
-
-
 
 ### Setting up CHTC Workspace
 
@@ -671,8 +630,6 @@ Prior to running the BRDF workflow, the processed reflectance files should be st
    ```
 
    It will install Miniconda, create needed directories, and update your `.bashrc` to automatically source the `htcondor.sh` shell utilities.
-
-
 
 #### Checking usage quotas
 
