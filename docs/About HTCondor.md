@@ -128,12 +128,12 @@ Schedd communicates with the Central Manager to find resources.
 
 ### Submit Files
 
-- [Sample submit description files]()
-- [Submitting many similar jobs with one queue command]()
-- [Variables in the Submit Description File]()
-- [Including Submit Commands Defined Elsewhere]()
-- [Using Conditionals in the Submit Description File]()
-- [Function Macros in the Submit Description File]()
+- [Sample submit description files](#...)
+- [Submitting many similar jobs with one queue command](#...)
+- [Variables in the Submit Description File](#...)
+- [Including Submit Commands Defined Elsewhere](#...)
+- [Using Conditionals in the Submit Description File](#...)
+- [Function Macros in the Submit Description File](#...)
 
 ### File Transfer Mechanism
 

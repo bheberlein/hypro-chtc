@@ -104,7 +104,7 @@ For CHTC processing, some additional files com into play:
 
     - The **raw data inputs** (`*.tar.gz`) must be transferred to **CHTC Staging** (`$STAGING/data/raw`).
     - The **config file(s)** must be transferred to **CHTC Staging** (`$STAGING/config`). The config files may be defined on a per-site, -session or -flightline basis. These are JSON files that are used to configure the processing options.
-    - The **job list** (`*_JobList.txt`) must be transferred to CHTC (e.g. **either** to `$STAGING/joblist` or to your user home on `townsend-ap2000`). The job list is a plaintext file that defines a batch of jobs, providing the flightline parameters (site name, date & flightline number) and resource requirements (disk & memory requests) for each job, one per line.
+    - The **job list** (`*_JobList.txt`) must be transferred to CHTC (e.g. **either** to `$STAGING/joblist` or to your user home on `townsend-ap2000`). The job list is a plain text file that defines a batch of jobs, providing the flightline parameters (site name, date & flightline number) and resource requirements (disk & memory requests) for each job, one per line.
 
   - Other files that must be available on Staging include:
 

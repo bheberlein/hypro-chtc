@@ -34,7 +34,7 @@ A new Python environment can be built from within your user home directory on th
    conda env create -f htconda.yml
    ```
 
-   The .YML file contains a simple plaintext description of the environment dependencies:
+   The .YML file contains a simple plain text description of the environment dependencies:
 
    ```yml
    name: htconda

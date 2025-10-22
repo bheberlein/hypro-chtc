@@ -43,7 +43,7 @@ A [**filesystem**](https://en.wikipedia.org/wiki/File_system) organizes how file
 
 The filesystem can be visualized as a tree structure with the filesystem root directory at its base, and files at the tips of its branches. For example:
 
-```plaintext
+```text
 .
 └── path/
     └── to/
@@ -57,7 +57,7 @@ Here, a ...
 
 The path to `file.ext` is:
 
-```plaintext
+```text
 /path/to/my/file.ext
 ```
 
@@ -73,7 +73,7 @@ Every file or directory can be uniquely identified by its path, which starts at 
 - The root directory is specified as `/`.
 - Example:
 
-  ```plaintext
+  ```text
   /path/to/my/file.ext
   ```
 
@@ -83,7 +83,7 @@ Every file or directory can be uniquely identified by its path, which starts at 
 - The filesystem root is specified by a **drive letter** (e.g., `C:\`).
 - Example:
 
-  ```plaintext
+  ```text
   C:\path\to\my\file.ext
   ```
 
