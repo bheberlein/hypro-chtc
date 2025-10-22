@@ -1,18 +1,12 @@
 # Getting Started With Image Processing on CHTC
 
-
-
 ## References
 
 - [CHTC Website](https://chtc.cs.wisc.edu)
 - [CHTC Guides](https://chtc.cs.wisc.edu/uw-research-computing/guides.html)
 - [HTCondor Documentation](https://htcondor.readthedocs.io/en/latest/)
 
-
-
 - [CHTC Status](https://status.chtc.wisc.edu)
-
-
 
 ## About CHTC
 
@@ -22,15 +16,11 @@ Programs are submitted to HTCondor as jobs, which are matched with candidates fr
 
 In order to use CHTC services, you will need to request an account.
 
-
-
 ## Requesting a CHTC Account
 
 To request an account with CHTC, fill out the [request form](https://chtc.cs.wisc.edu/form). You will need to provide some detailed information about how you expect to use CHTC. You will have to meet with CHTC staff to discuss this further to get approved, so discuss these details with your supervisor ahead of time if you are unsure about anything.
 
 In your request, be sure to ask for access to Staging (CHTC large data temporary storage). Also, request to have your user added to the `townsend_airborne` user group.
-
-
 
 ## Overview of CHTC
 
@@ -48,10 +38,7 @@ Users & user groups wishing to use Staging must request an allocation. A Staging
 
 ### Transfer
 
-The Transfer server (`transfer.chtc.wisc.edu`) is a dedicated server for moving large files (or large numbers of files) to & from Staging. **Avoid using the submit server for managing large data transfers** — especially the general-use submit servers `ap2001` & `ap2002`.
-
-
-
+The Transfer server (`transfer.chtc.wisc.edu`) is a dedicated server for moving large files (or large numbers of files) to & from Staging. **Avoid using the submit server for managing large data transfers** — especially the general-use submit servers `ap2001` & `ap2002`.
 
 ## Managing processing jobs on CHTC
 
@@ -90,7 +77,7 @@ Additionally, within the submit file you can
 
 You can pass environment variables to jobs using the `environment` command in your submit file:
 
-```
+```submit
 # Pass condor job ID as an environment variable
 environment = CONDOR_JOB_ID=$(Cluster).$(Process)
 ```
@@ -99,11 +86,11 @@ environment = CONDOR_JOB_ID=$(Cluster).$(Process)
 
 You can use `if... else... endif` to implement conditional logic:
 
-```
+```submit
 if $(condition)
    ...
 else
-	 ...
+   ...
 endif
 ```
 
@@ -111,7 +98,7 @@ Note that `elif` is also viable. [See the HTCondor documentation](https://htcond
 
 ###### Example: *Check if variable is defined & modify arguments accordingly*
 
-```
+```submit
 if defined project
    arguments=$(arguments) $(project)
 endif
@@ -121,25 +108,23 @@ endif
 
 In your submit file, you can use the `include` command to incorporate the contents of another file into your submit description:
 
-```
+```submit
 include : ./s3-credentials.sub
 ```
 
 Alternatively, follow the statement by a pipe/bar character (`|`) to execute the indicated file & incorporate its output into your submit description:
 
-```
+```submit
 include : ./list-input-files.sh |
 ```
 
-
-
 ### Queue Statement
 
-The `queue` statement is an essential part of the submit file which is responsible for initiating one or more tasks to be scheduled. 
+The `queue` statement is an essential part of the submit file which is responsible for initiating one or more tasks to be scheduled.
 
 #### Queueing from a file
 
-Create a file, e.g. `joblist/BASS_2018_JobList.txt`, for each site. The contents of the file should provide job parameters for each flightline: 
+Create a file, e.g. `joblist/BASS_2018_JobList.txt`, for each site. The contents of the file should provide job parameters for each flightline:
 
 ```text
 BASS, 20180629, 01, 47GB, 11GB
@@ -166,7 +151,6 @@ for SITE in $SITES; do
 done
 ```
 
-
 #### Queueing from a string
 
 A single job can easily be queued from a string:
@@ -174,8 +158,6 @@ A single job can easily be queued from a string:
 ```bash
 condor_submit $SUBMIT joblist="(BASS, 20180629, 01, 50GB, 20GB)"
 ```
-
-
 
 ### Pass submit variables directly to `condor_submit`
 
@@ -185,16 +167,14 @@ It is possible to use variables inside your submit file which are not defined in
 condor_submit my_job.sub disk=100GB memory=30GB
 ```
 
-
-
 ## Job management & troubleshooting
 
-##### References
+### References
 
 - [HTCondor Job ClassAd Attributes](https://htcondor.readthedocs.io/en/latest/classad-attributes/job-classad-attributes.html?highlight=JobStatus)
 - [CHTC - Learning About Your Jobs Using `condor_q`](https://chtc.cs.wisc.edu/uw-research-computing/condor_q)
 
-##### Investigating held jobs
+#### Investigating held jobs
 
 By itself, `condor_q --hold` (or `--held`) will list held jobs & the reason for being held.
 
@@ -212,7 +192,7 @@ Multiple constraints can be chained together. The following will find jobs that 
 condor_q -constraint "JobStatus != 5" -constraint "JobStatus != 2" -af ClusterId ProcId
 ```
 
-##### Investigate jobs in-depth
+#### Investigate jobs in-depth
 
 ```shell
 condor_q -analyze
@@ -226,7 +206,7 @@ Use `-af:j` to list the job ID first:
 condor_q -af:j RequestMemory
 ````
 
-> ```
+> ```stdout
 > 89980.3 392192
 > 89980.4 320512
 > 89980.6 305152
@@ -240,10 +220,7 @@ condor_q --held -af:j DiskUsage RequestDisk
 
 See the [`condor_q` man page](https://htcondor.readthedocs.io/en/latest/man-pages/condor_q.html) for more information.
 
-
-
-
-##### Rescuing a job that exceeded its requested disk or memory
+#### Rescuing a job that exceeded its requested disk or memory
 
 It may be helpful to check how much memory the job requested vs. how much it used before it was held with `condor_q xxxxx.y -af RequestMemory MemoryUsage`  (`xxxxx.y` is the job ID, and the output is in MiB):
 
@@ -251,7 +228,7 @@ It may be helpful to check how much memory the job requested vs. how much it use
 condor_q 80293.0 -af RequestMemory MemoryUsage
 ```
 
-> ```
+> ```stdout
 > 32768 34180
 > ```
 >
@@ -262,7 +239,7 @@ You can then set `RequestMemory` to an appropriate value using `condor_qedit xxx
 condor_qedit 80293.0 RequestMemory 40000
 ```
 
-> ```
+> ```stdout
 > Set attribute "RequestMemory" for 1 matching jobs.
 > ```
 
@@ -270,7 +247,7 @@ condor_qedit 80293.0 RequestMemory 40000
 condor_q 80293.0 -af RequestMemory
 ```
 
-> ```
+> ```stdout
 > 40000
 > ```
 >
@@ -293,14 +270,12 @@ Then you can release the job, hopefully to complete successfully: `condor_releas
 condor_release 80923
 ```
 
-> ```
+> ```stdout
 > All jobs in cluster 80293 have been released
 > ```
->
 
 The above examples use `RequestMemory` and `MemoryUsage`, but you can run the same commands substituting with `RequestDisk` and `DiskUsage`.
 
 > ***NOTE:** Confusingly, disk space is reported in **KiB**, while memory is reported in **MiB**.*
 
 If you need to raise either the disk or memory for a job, it might be a good idea to increase both.
-

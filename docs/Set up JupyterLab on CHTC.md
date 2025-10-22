@@ -18,13 +18,11 @@ conda activate esker
 dask-chtc jupyter run lab --port 4000
 ```
 
-
-
 ## Set up `dask-chtc` on CHTC
 
-Create a conda environment with 
+Create a conda environment with
 
-```
+```text
 numpy
 jupyterlab
 dask
@@ -33,6 +31,7 @@ dask-labextension
 python-graphviz
 ```
 
+...
 
 ```shell
 conda clean --all
@@ -56,20 +55,15 @@ I encountered an incompatibility between `dask` & an old version of `dark_jobque
 pip install dask-jobqueue --upgrade
 ```
 
-
-
-
 ```cmd
 "C:\Program Files\PuTTY\putty.exe" -ssh 
 ```
-
 
 ### Launch dask lab
 
 ```shell
 dask-chtc jupyter run lab --port 8888
 ```
-
 
 ### Connect from user machine
 

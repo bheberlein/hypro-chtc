@@ -27,14 +27,14 @@ A **file extension** is a suffix added to a file's name, typically after a dot (
 | `script.sh`    | `.sh`             | shell script               |
 | `script.py`    | `.py`             | Python script              |
 
-
 Some file types use compound extensions, with multiple components delimited by dots.
 
-While extensions are helpful, they are not always required or enforced. In fact, they are only symbolic hints at the type of data a file might contain, or how you might want to interact with a file, 
+While extensions are helpful, they are not always required or enforced. In fact, they are only symbolic hints at the type of data a file might contain, or how you might want to interact with a file,
 
 ## Filesystems & Filepaths
 
 A [**filesystem**](https://en.wikipedia.org/wiki/File_system) organizes how files and directories (also called folders) are stored and accessed on a computer. Most modern filesystems follow a **hierarchical tree model**:
+
 - **Files** can contain data.
 - **Directories** can contain files & other directories.
 - The entire filesystem is organized within a single **root directory**.
@@ -42,6 +42,7 @@ A [**filesystem**](https://en.wikipedia.org/wiki/File_system) organizes how file
 ### The Filesystem Tree Concept
 
 The filesystem can be visualized as a tree structure with the filesystem root directory at its base, and files at the tips of its branches. For example:
+
 ```plaintext
 .
 └── path/
@@ -49,11 +50,13 @@ The filesystem can be visualized as a tree structure with the filesystem root di
         └── my/
             └── file.ext
 ```
-Here, a 
 
-> **HOW TO INTERPRET THE TREE GRAPH:** The 
+Here, a ...
+
+> **HOW TO INTERPRET THE TREE GRAPH:** The ...
 
 The path to `file.ext` is:
+
 ```plaintext
 /path/to/my/file.ext
 ```
@@ -65,17 +68,21 @@ Every file or directory can be uniquely identified by its path, which starts at 
 ### Filepath Conventions
 
 #### UNIX Systems
+
 - Use **forward slashes** (`/`) to separate directories.
 - The root directory is specified as `/`.
 - Example:
+
   ```plaintext
   /path/to/my/file.ext
   ```
 
 #### Windows Systems
+
 - Use **backward slashes** (`\`) to separate directories.
 - The filesystem root is specified by a **drive letter** (e.g., `C:\`).
 - Example:
+
   ```plaintext
   C:\path\to\my\file.ext
   ```
@@ -84,29 +91,33 @@ Every file or directory can be uniquely identified by its path, which starts at 
 
 ---
 
-
 ## Local, Nonlocal & Distributed Filesystems
 
 - A **local filesystem** is stored on a computer's internal storage.
 - A **network filesystem** accesses files stored on another machine over a network. The remote files appear as part of the local filesystem but have different access paths or prefixes depending on the system used to connect.
 - A **distributed filesystem** spreads data across multiple machines, often used in cloud environments.
 
-> **Tip:** When accessing network files, check the path’s prefix (e.g., `/mnt/network_drive/` vs. `\\server\share\`) to ensure it aligns with your system.
+> **Tip:** When accessing network files, check the path's prefix (e.g., `/mnt/network_drive/` vs. `\\server\share\`) to ensure it aligns with your system.
 
 ---
 
 ## Absolute & Relative Paths
 
 ### Absolute Paths
+
 An **absolute path** specifies the location of a file starting from the root of the filesystem.
+
 - UNIX example: `/path/to/file.txt`
 - Windows example: `C:\path\to\file.txt`
 
 ### Relative Paths
+
 A **relative path** specifies the location of a file relative to the current working directory.
+
 - Example: If the current directory is `/path/to/my`, the relative path `file.txt` points to `/path/to/my/file.txt`.
 
 ### Special Characters in Paths
+
 - `~`: Refers to your home directory (e.g., `/home/user` on Linux).
 - `./`: Refers to the current directory.
 - `../`: Refers to the parent of the current directory.
@@ -128,4 +139,4 @@ A **relative path** specifies the location of a file relative to the current wor
 3. **Escape Characters on Windows Paths**:
    - In scripts, use double backslashes (`C:\\path\\to\\file.txt`) or raw strings (`r"C:\path\to\file.txt"`) to avoid errors.
 
-By mastering these basics, you’ll be well-equipped to navigate and manage files on any system!
+By mastering these basics, you'll be well-equipped to navigate and manage files on any system!

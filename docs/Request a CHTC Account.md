@@ -1,37 +1,32 @@
 # CHTC Account Request Guide
 
-
-
 ## Links
 
 - [Request an account on CHTC](https://uwmadison.co1.qualtrics.com/jfe/form/SV_8f6nTgaaVhefdmS)
 - [User expectations](https://chtc.cs.wisc.edu/uw-research-computing/user-expectations.html)
 - [HTC guide](https://chtc.cs.wisc.edu/uw-research-computing/guides.html#htc-documentation)
 
-
-
 ## Form Responses
 
 - *UW-Madison Faculty Sponsor (PI)*
 
-  >  **Phil Townsend ptownsend@wisc.edu**
+  > **Phil Townsend `ptownsend@wisc.edu`**
 
 - *Do you expect someone to mentor you on how to use CHTC resources?*
 
-  >  **Yes**
+  > **Yes**
 
 - *About Your Mentor*
 
-  >  **Brendan Heberlein bheberlein@wisc.edu**
+  > **Brendan Heberlein `bheberlein@wisc.edu`**
 
 - *How did you hear about CHTC? (Check all that apply)*
 
-  >  **Word of Mouth from *inside* your Research Group (PI, group member, etc.)**
+  > **Word of Mouth from *inside* your Research Group (PI, group member, etc.)**
 
 - *Briefly describe your research to help us answer the question, "How can CHTC help your research?"*
 
   > **CHTC has been instrumental in scaling up the Townsend Lab's airborne imaging program by enabling high-throughput processing of large image datasets. Our data collection flights generate large image datasets which require intensive processing to prepare them for analysis.**
-
 
 - *Which of the following could be used to describe your research computing? (Check all that apply)*
 
@@ -41,7 +36,7 @@
 
 - *What is the primary software/program/package(s) that you plan on using? If possible, provide a link to the program's website.*
 
-  > **Python code developed by Townsend Lab: https://github.com/EnSpec/hypro, https://github.com/EnSpec/hytools**
+  > **Python code developed by Townsend Lab: `https://github.com/EnSpec/hypro`, `https://github.com/EnSpec/hytools`**
 
 - *Which of the following systems have you used for similar computing work? (Check all that apply)*
 
@@ -63,7 +58,7 @@
 
   > **80 - 100**
 
-- *How long (in hours) does your calculation take to run using the resources you selected above?* 
+- *How long (in hours) does your calculation take to run using the resources you selected above?*
 
   > **< 8**
 

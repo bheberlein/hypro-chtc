@@ -4,20 +4,15 @@ This document details how to prepare a portable Python environment using Minicon
 
 > ***NOTE:** These instructions were adapted from the [CHTC website](https://chtc.cs.wisc.edu/uw-research-computing/conda-installation.html).*
 
-
-
 ## References
 
 * [`conda` Documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#)
-
-
 
 ## Preparing a New Environment
 
 > ***NOTE:** Much of this can be done easily with the convenience functions in `utils/conda.sh`.*
 
 A new Python environment can be built from within your user home directory on the submit server.
-
 
 1. **Download & install miniconda.**
 
@@ -32,15 +27,15 @@ A new Python environment can be built from within your user home directory on th
    Say *"yes"* to initialize.
 
 2. **Build a conda environment.**
-   
+
    A custom Python environment can easily be built from .YML file:
-   
+
    ```shell
    conda env create -f htconda.yml
    ```
-   
+
    The .YML file contains a simple plaintext description of the environment dependencies:
-   
+
    ```yml
    name: htconda
    channels:
@@ -58,9 +53,9 @@ A new Python environment can be built from within your user home directory on th
      - arosics
      - lxml
    ```
-   
+
    Alternately, the environment can be built interactively using `conda`:
-   
+
    ```shell
    conda create -n htconda python=3.6 
    conda activate htconda
@@ -69,28 +64,24 @@ A new Python environment can be built from within your user home directory on th
    ```
 
 3. **Package the environment into a `.tar` archive.**
-   
+
    Finally, the environment is packed from within the base environment:
-   
+
    ```shell
    conda deactivate
    conda install -c conda-forge conda-pack
    ```
-   
+
    ```shell
    conda pack -n htconda
    chmod 644 htconda.tar.gz
    ```
-
 
 4. Don't forget to clean up!
 
    ```shell
    rm Miniconda3-latest-Linux-x86_64.sh
    ```
-
-
-
 
 ## Deploying a packaged environment
 
@@ -108,4 +99,3 @@ Deactivate if needed with:
 ```{bash eval=F}
 source $ENVDIR/bin/deactivate
 ```
-
