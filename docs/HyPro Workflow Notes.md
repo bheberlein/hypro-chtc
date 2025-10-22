@@ -175,6 +175,27 @@ $FARNSWORTH/data/processed/airborne/$PROJECT/$YEAR/refl
 
 > **NOTE:** For `scp`, similar to `ssh` & other tools, the user & address of a remote machine can be specified along with the file path as `user@address:/path`.
 
+#### Using `rsync`
+
+To copy back from Staging, using Krusty
+
+```shell
+KRUSTY_MOUNT=/mnt/farnsworth/Enspec
+```
+
+```shell
+echo "LAKE_20240925_*_Processed.tar.gz" >> patterns.txt
+rsync -avPh --include-from=patterns.txt $USER@$TRANSFER:$STAGING/data/processed/hypro/LAKE_20240925 $KRUSTY_MOUNT/data/processed/airborne/LakeView/2024/
+# Makes a new directory `$KRUSTY_MOUNT/data/processed/airborne/LakeView/2024/LAKE_20240925` & syncs everything to that
+```
+
+```shell
+echo "LAKE_20240925_02_Processed.tar.gz" >> files.txt
+echo "LAKE_20240925_05_Processed.tar.gz" >> files.txt
+rsync -avPh --files-from=files.txt $USER@$TRANSFER:$STAGING/data/processed/hypro/LAKE_20240925 $KRUSTY_MOUNT/data/processed/airborne/LakeView/2024/
+# Makes a new directory `$KRUSTY_MOUNT/data/processed/airborne/LakeView/2024/LAKE_20240925` & syncs everything to that
+```
+
 #### Using `rclone`
 
 ##### Configure remotes
@@ -290,23 +311,37 @@ rclone copy -P "remote:..."
          boost $job_id 1.0 1.2
          ```
          
-         You can boost all held jobs with the same boosting factors using `boost_all`, e.g. to increase the requested disk space by 20% for all held jobs you can use
-         
-         ```shell
-         boost_all 1.2 1.0
-         ```
-         
-         Or you can manually specify a sequence of job IDs for boosting by common factors, e.g.
-         
-         ```shell
-         # Give a sequence of job IDs
-         jobs='128045.0 128055.11 128055.47 128072.28'
-         
-         for job in $jobs; do
-           # Increase memory request by 50%
-           boost $job 1 1.5
-         done
-         ```
+         > **NOTES:** Currently there may be some bugs in the `boost` utility. To accomplish this manually,
+         >
+         > 1. Use `condor_q $job_id -af HoldReason` to determine whether it is the disk or memory request that needs to be increased (or both).
+         >
+         > 2. Check the current usage of the job using `condor_q` to query either the `DiskUsage` or `MemoryUsage` of the job:
+         >
+         >    ```shell
+         >    condor_q $job_id -af DiskUsage
+         >    ```
+         >
+         >    **Note that the reported units will be different for disk (MiB) vs. memory (KiB).**
+         >
+         > 3. Determine boosting factors for disk & memory. To leave either one unchanged, pass a value of `1` or `1.0`.
+         >
+         >    - Usually a 10–30% increase will be sufficient to get the job to complete successfully; often, you can just go for a boost factor of 1.2 (20% increase).
+         >
+         > 4. Use `condor_qedit` to update the resource requests by modifying either the `RequestDisk` or `RequestMemory` job attributes:
+         >
+         >    ```shell
+         >    condor_qedit $job_id RequestDisk $disk_request
+         >    ```
+         >
+         >    where `$disk_request` is the updated disk resource request, calculated by multiplying the original request by the boosting factor. Or, if this value is still less than the current disk usage of the job as reported by `condor_q`, instead multiply the current usage by the boot factor.
+         >
+         > 5. Release the job with `condor_release`:
+         >
+         >    ```shell
+         >    condor_release $job_id
+         >    ```
+         >
+         >    The job will return to the queue in an idle state & wait to be matched with a machine for job execution.
      
      - When a job is removed from the queue, it has finished — it could have completed successfully, but it is also possible that it encountered a silent error.
        
