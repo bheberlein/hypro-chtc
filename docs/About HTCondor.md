@@ -45,6 +45,8 @@ All machines in the cluster are running some kind of HTCondor daemon.
 
 The Central Manager node runs the Collector & Negotiator daemons, which provide the functional backbone of the computing system.
 
+#### Collector
+
 The **Collector** maintains a central inventory of all the pieces of the HTCondor pool.
 
 - Tracks the state of all machines in the pool.
@@ -54,23 +56,30 @@ The **Collector** maintains a central inventory of all the pieces of the HTCondo
 The Collector gathers descriptions of the states of all the daemons in your HTCondor pool. It provides both **service discovery** and **monitoring** for these daemons.
 
 For example, each machine that can run jobs will advertise a ClassAd describing its resources and state. In this module, we'll learn the basics of querying the collector for information and displaying results.
+
 The Schedd maintains a queue of jobs and is responsible for managing their execution. We'll learn the basics of querying the schedd.
 
-The **Negotiator**
+#### Negotiator
+
+The **Negotiator** is responsible for matching jobs to worker nodes.
 
 - Matches jobs to available resources using policies and priorities.
 - Negotiates between job requests and resource offers to assign tasks to worker nodes.
 
 ### Submit Node Daemons
 
-The **Schedd** (scheduler) daemon
+#### Schedd
+
+The **Schedd** (scheduler) daemon is responsible for submitting jobs to the pool.
 
 - Manages user job queues on the submit node.
 - Handles job submission, monitoring, and result retrieval.
 - Communicates with the Central Manager to find suitable worker nodes.
 - Can queue jobs locally if the cluster is busy, ensuring eventual execution.
 
-Aditional **Shadow** daemons are spawned for each running job
+#### Shadow
+
+Additional **Shadow** daemons are spawned for each running job
 
 > Every machine in the pool has certain properties: its architecture, operating system, amount of memory, the speed of its CPU, amount of free swap and disk space, and other characteristics. Similarly, every job has certain requirements and preferences. ... The owner of a job specifies the requirements and preferences of the job when it is submitted. The properties of the computing resources are reported to the central manager by the startd on each machine in the pool. The negotiator's task is not only to find idle machines, but machines with properties that match the requirements of the jobs, and if possible, the job preferences.
 
@@ -79,50 +88,60 @@ Aditional **Shadow** daemons are spawned for each running job
 
 ### Worker Node Daemons
 
+#### Startd
+
 The **Startd** daemon
 
 - Advertises the machine's availability and resources (CPU, memory, etc.) to the Central Manager.
+
 - Accepts and runs jobs sent by the Schedd.
 
- Starter:
-A helper process spawned by Startd to execute the job on the worker node.
-Manages the job's lifecycle (e.g., starting, suspending, terminating).
+Starter:
+
+- A helper process spawned by Startd to execute the job on the worker node.
+- Manages the job's lifecycle (e.g., starting, suspending, terminating).
+
 Shared Utility Daemons
 
-Master:
-Oversees the other daemons on a machine, ensuring they are running and restarting them if they fail.
-Runs on every machine in the cluster.
-Shadow:
-Manages a job's execution on the submit node side.
-Handles tasks like transferring files to/from the worker node.
+- Master:
+  - Oversees the other daemons on a machine, ensuring they are running and restarting them if they fail.
+  - Runs on every machine in the cluster.
+- Shadow:
+  - Manages a job's execution on the submit node side.
+  - Handles tasks like transferring files to/from the worker node.
+
 Workflow Overview
-Job Submission:
-A user writes a submit file defining the job's requirements (e.g., executable, arguments, resources).
-The job is submitted via condor_submit to the Schedd daemon on the submit node.
-Resource Advertisement:
-Worker nodes, via Startd, advertise their availability and resource specifications to the Collector.
-Matchmaking:
-The Negotiator daemon queries the Collector for available jobs and resources.
-Matches jobs to resources based on user-defined policies (e.g., resource requirements, priorities).
-Job Execution:
-Once matched, the Schedd contacts the matched Startd to send the job.
-The Startd spawns a Starter process to execute the job.
-The Shadow process on the submit node handles file transfers and monitors job progress.
-Completion and Cleanup:
-After execution, results are sent back to the submit node.
-The job's status is updated in the queue, and any remaining cleanup is handled by the Starter and Shadow.
+
+- Job Submission:
+  - A user writes a submit file defining the job's requirements (e.g., executable, arguments, resources).
+  - The job is submitted via condor_submit to the Schedd daemon on the submit node.
+- Resource Advertisement:
+  - Worker nodes, via Startd, advertise their availability and resource specifications to the Collector.
+- Matchmaking:
+  - The Negotiator daemon queries the Collector for available jobs and resources.
+  - Matches jobs to resources based on user-defined policies (e.g., resource requirements, priorities).
+- Job Execution:
+  - Once matched, the Schedd contacts the matched Startd to send the job.
+  - The Startd spawns a Starter process to execute the job.
+  - The Shadow process on the submit node handles file transfers and monitors job progress.
+- Completion and Cleanup:
+  - After execution, results are sent back to the submit node.
+  - The job's status is updated in the queue, and any remaining cleanup is handled by the Starter and Shadow.
+
 Communication and Configuration
-Communication: HTCondor daemons communicate using TCP/IP. All daemons rely on the Collector for discovery and use well-defined protocols to interact.
-Configuration:
-Each machine has a configuration file (condor_config) specifying roles, policies, and parameters.
-Policies control job priorities, resource allocation, preemption, and scheduling behavior.
-Key Features
-ClassAds:
+
+- Communication: HTCondor daemons communicate using TCP/IP. All daemons rely on the Collector for discovery and use well-defined protocols to interact.
+- Configuration:
+  Each machine has a configuration file (condor_config) specifying roles, policies, and parameters.
+  Policies control job priorities, resource allocation, preemption, and scheduling behavior.
+  Key Features
+  ClassAds:
 
 Your Access Point
 As a user:
-You submit jobs to a Schedd daemon on an access point (submit node).
-Schedd communicates with the Central Manager to find resources.
+
+- You submit jobs to a Schedd daemon on an access point (submit node).
+- Schedd communicates with the Central Manager to find resources.
 
 ## Implementation Details
 
