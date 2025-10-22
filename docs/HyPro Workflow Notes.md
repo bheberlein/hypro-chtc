@@ -134,26 +134,26 @@ Launch the **"CHTC Preprocessing**" Jupyter notebook & run the code cells to do 
    - [x] Verify pixel size
    - [x] Verify DEM & vertical datum
 
-3. **Package up the raw data input files into `.tar.gz` archives.**
+2. **Package up the raw data input files into `.tar.gz` archives.**
 
-  - Each archive will contain 6 files (2 each of `*.hyspex`, `*.hdr`, `*.txt`).
+   - Each archive will contain 6 files (2 each of `*.hyspex`, `*.hdr`, `*.txt`).
 
-4. **Move input archives to CHTC Staging via Globus.**
+3. **Move input archives to CHTC Staging via Globus.**
 
-5. **Generate the job list.**
+4. **Generate the job list.**
 
-  - Place in `$STAGING/joblist`.
+   - Place in `$STAGING/joblist`.
 
-6. **Generate the processing configuration file (JSON).**
+5. **Generate the processing configuration file (JSON).**
 
-  - Config can be generated at the level of **project**, **session** or **flightline**. To be found by the CHTC job script, the config must be named according to the correct naming conventions. The script will look for the following files, in order, and use the first one that it finds.
+   - Config can be generated at the level of **project**, **session** or **flightline**. To be found by the CHTC job script, the config must be named according to the correct naming conventions. The script will look for the following files, in order, and use the first one that it finds.
 
-    1. A **flightline-level** config file <u>nested in a session directory</u>, named as **`${SESSION}/${FLIGHTLINE}_Config.json`**.
+    1. A **flightline-level** config file *nested in a session directory*, named as **`${SESSION}/${FLIGHTLINE}_Config.json`**.
     2. A **session-level** config, named as **`${SESSION}_Config.json`**.
     3. A **season-level** config, named as **`${SITE}_${YEAR}_Config.json`**.
     4. A **project-level** config, named as **`${PROJECT}_Config.json`**.
 
-  - Place in `$STAGING/config`.
+   - Place in `$STAGING/config`.
 
 ### Copying files to & from CHTC Staging
 
@@ -352,7 +352,7 @@ rclone copy -P "remote:..."
            - When a job is removed from the queue, it has finished — it could have completed successfully, but it is also possible that it encountered a silent error.
 
              - Check whether there are `*_Processed.tar.gz` files in the output directory.
-             - Sometimes the `.tar.gz` files exist, but are very small — e.g. 0–100 KB. This usually indicates a problem, i.e. the processing failed somehow, even if HTCondor thinks the job completed successfully.
+             - Sometimes the `.tar.gz` files exist, but are very small — e.g. 0 – 100 KB. This usually indicates a problem, i.e. the processing failed somehow, even if HTCondor thinks the job completed successfully.
 
            - When a job fails, ...
 
@@ -410,7 +410,7 @@ We can build a map project to facilitate easy inspection of the images.
 2. Activate Conda environment
 
    ```shell
-   conda activate cole
+   conda activate enspec
    ```
 
 3. Launch QGIS from command line
@@ -421,9 +421,9 @@ We can build a map project to facilitate easy inspection of the images.
 
 4. Open Python console in QGIS
 
-  - Basically, run commands from `script/demos/pyqgis/load_images.py` (in the `enspec` repo)
-    - `image_directory` should be the path to the `refl` directory
-    - `label` is somewhat arbitrary, but would generally be the project name
+   - Basically, run commands from `script/demos/pyqgis/load_images.py` (in the `enspec` repo)
+     - `image_directory` should be the path to the `refl` directory
+     - `label` is somewhat arbitrary, but would generally be the project name
 
 5. **Save the QGIS project** in the project directory.
 
@@ -431,7 +431,7 @@ We can build a map project to facilitate easy inspection of the images.
 
 As a final check, we should visually assess the processed imagery to see that it looks reasonable, e.g.
 
-- Reflectance values should generally range from 0 – 10,000 (0 – 100%).
+- Reflectance values should generally range 0 – 10,000 (0 – 100%).
 - Vegetation pixels should have characteristic features, i.e. green peak, red edge, NIR plateau, IR water absorption bands.
 - Vegetation pixels peak around 40 – 70% reflectance in the NIR.
 - Image features should appear undistorted.
@@ -474,31 +474,31 @@ Prior to running the BRDF workflow, the processed reflectance files should be st
 
 1. Generate a template lines dictionary file.
 
-  - Use `generate_lines_dict` function from `enspec.processing.utilities.lines_dict`
+   - Use `generate_lines_dict` function from `enspec.processing.utilities.lines_dict`
 
-    - Pass path to `refl` directory as positional argument
+     - Pass path to `refl` directory as positional argument
 
-      ```python
-      from enspec.processing.utilities.lines_dict import generate_lines_dict
+       ```python
+       from enspec.processing.utilities.lines_dict import generate_lines_dict
+    
+       generate_lines_dict('/data/processed/airborne/Hancock_ARS/2024/refl')
+       ```
 
-      generate_lines_dict('/data/processed/airborne/Hancock_ARS/2024/refl')
-      ```
-
-    **NOTE:** The file is generated assuming that all images are suitable to use for fitting BRDF corrections. We want to manually edit this file to remove the numbers of any bad images/flightlines so that they will be withheld during model fitting.
+     **NOTE:** The file is generated assuming that all images are suitable to use for fitting BRDF corrections. We want to manually edit this file to remove the numbers of any bad images/flightlines so that they will be withheld during model fitting.
 
 2. **Open QGIS project to inspect imagery.**
 
 3. **Toggle through image layers one by one** to verify they appear OK
 
-  - Primarily, bad images will be those with **> 10% cloud shadow or cloud pixels**.
-  - *If you're not sure if an image is good or bad, ask Brendan.*
-  - **NOTE:** Bad images will be withheld during **fitting** of the BRDF correction, but the correction will be **applied** to all of the images.
+   - Primarily, bad images will be those with **> 10% cloud shadow or cloud pixels**.
+   - *If you're not sure if an image is good or bad, ask Brendan.*
+   - **NOTE:** Bad images will be withheld during **fitting** of the BRDF correction, but the correction will be **applied** to all of the images.
 
 4. **Bad images** (i.e. > 10% cloud shadow) **should be removed** from the JSON file.
 
-  1. Open the JSON in a text editor.
-  2. Find the corresponding session in the JSON structure (look for e.g. `"LOEW_20230621": [...],`).
-  3. Find the image number in the associated list & remove it. (Make sure to remove the comma as well!)
+   1. Open the JSON in a text editor.
+   2. Find the corresponding session in the JSON structure (look for e.g. `"LOEW_20230621": [...],`).
+   3. Find the image number in the associated list & remove it. (Make sure to remove the comma as well!)
 
 5. **Save modified lines dictionary.**
 
@@ -510,9 +510,9 @@ Prior to running the BRDF workflow, the processed reflectance files should be st
 
 2. Check that the processed reflectance images are in place on Farnsworth (proper directory structure, etc.)
 
-  - Need to extract `*_Processed.tar.gz` first
-  - Need to place site/session folders inside `refl` directory (within data directory)
-  - Need lines dictionary JSON file in place
+   - Need to extract `*_Processed.tar.gz` first
+   - Need to place site/session folders inside `refl` directory (within data directory)
+   - Need lines dictionary JSON file in place
 
 3. Activate Conda environment
 
@@ -528,25 +528,25 @@ Prior to running the BRDF workflow, the processed reflectance files should be st
      cd ~/git/enspec
      ```
 
-     - The simplest way to call BRDF processing is
+   - The simplest way to call BRDF processing is
 
-       ```shell
-       python ${script_dir}/brdf_batch_process.py -d $data_directory --invert-mask
-       ```
+     ```shell
+     python ${script_dir}/brdf_batch_process.py -d $data_directory --invert-mask
+     ```
 
-       where (if running from `~/git/enspec` as above) `script_dir=src/enspec/processing/workflows`.
+     where (if running from `~/git/enspec` as above) `script_dir=src/enspec/processing/workflows`.
 
-       > **NOTES:**
-       > - When constructing filepaths that point to **network filesystems (like the Farnsworth drive)** you should take extra care to make sure that they are expressed correctly for the machine you are running the code on. That is, filepaths pointing to files on Farnsworth will generally have a different prefix, depending on which machine the code is run from &  (leading portion of the path, which could include multiple directory levels) 
-       > - **If the `-f` flag is NOT used** to specify the lines dictionary file, by default the script will look by for a file directly within  
-       > - The **data directory** (supplied to the command-line script with the `-d` flag) should be one directory level above the `refl` folder.
-       > - If you are doing the **BRDF corrections on Krusty**, paths pointing to **files stored on Farnsworth** need to be constructed relative to the mount point at `/mnt/farnsworth/Enspec`.
-       > - On a **Windows** machine (e.g. **UWSPEX**), network drives such as Farnsworth are typically mapped to a **drive letter** (e.g. `Z:\`) which serves as the filepath prefix.
-       > - On **macOS**, the network share will appear in `/Volumes` (e.g. `/Volumes/Enspec/`)
-       >              Original file path for directory: `-d 'Z:/data/processed/airborne/BorealBirds/2024'`
-       >              File path for directory when working from Krusty: `-d'/mnt/farnsworth/Enspec/data/processed/airborne/BorealBirds/2024'`
+     > **NOTES:**
+     > - When constructing file paths that point to **network filesystems (like the Farnsworth drive)** you should take extra care to make sure that they are expressed correctly for the machine you are running the code on. That is, any paths pointing to files on Farnsworth will **need to use a prefix that is specific to the machine running the code**. The prefix is the leading portion of the path, which could include multiple directory levels, and which reflects how the network storage is mounted on the local filesystem.
+     > - **If the `-f` flag is NOT used** to specify the lines dictionary file, by default the script will look by for a file directly within  
+     > - The **data directory** (supplied to the command-line script with the `-d` flag) should be one directory level above the `refl` folder.
+     > - If you are doing the **BRDF corrections on Krusty**, paths pointing to **files stored on Farnsworth** need to be constructed relative to the mount point at `/mnt/farnsworth/Enspec`.
+     > - On a **Windows** machine (e.g. **UWSPEX**), network drives such as Farnsworth are typically mapped to a **drive letter** (e.g. `Z:\`) which serves as the filepath prefix.
+     > - On **macOS**, the network share will appear in `/Volumes` (e.g. `/Volumes/Enspec/`)
+     >              Original file path for directory: `-d 'Z:/data/processed/airborne/BorealBirds/2024'`
+     >              File path for directory when working from Krusty: `-d'/mnt/farnsworth/Enspec/data/processed/airborne/BorealBirds/2024'`
 
-     - Optionally, specify the lines dictionary file to use by appending to the command above
+   - Optionally, specify the lines dictionary file to use by appending to the command above
 
        ```shell
        -f path/to/$PROJECT/$PROJECT_LinesDict.json
@@ -554,38 +554,38 @@ Prior to running the BRDF workflow, the processed reflectance files should be st
 
        By default, (no `-f` flag) the script looks for a file with the same basename as the data directory, e.g. `HARS_2024_LinesDict.json`
 
-     - Use the `--grouped-by-site` option when the project has multiple sites & the session directories are nested inside of the site directories (this adds an extra level of organization in the directory structure).
+   - Use the `--grouped-by-site` option when the project has multiple sites & the session directories are nested inside of the site directories (this adds an extra level of organization in the directory strture).
 
-     - **Use the `--invert-mask` option to invert the data mask.** This is used when the input data mask is generated with the opposite interpretation as used by HyTools, as is currently the case for HyPro.
+   - **Use the `--invert-mask` option to invert the data mask.** This is used when the input data mask is generated with the opposite interpretation as used by HyTools, as is currently the case for HyP.
 
-       ```shell
-       python src/enspec/processing/workflows/brdf_batch_process.py -d $data_directory --invert-mask
-       ```
+     ```shell
+     python src/enspec/processing/workflows/brdf_batch_process.py -d $data_directory --invert-mask
+     ```
 
-     - Optionally, if you are doing a test run for BRDF corrections and want to submit a single site or one session (assuming you have already generated a test LinesDict.json file) you would also append to the command above by using `-f ${subset}_LinesDict.json`
+   - Optionally, if you are doing a test run for BRDF corrections and want to submit a single site or one session (assuming you have already generated a test LinesDict.json file) you would also append to the command above by using `-f ${subset}_LinesDict.json`
 
 ## Appendices
 
 ### Servers
 
-**EnSpec Servers**
+#### EnSpec Servers
 
-###### Filesystem Servers (Storage)
+##### Filesystem Servers (Storage)
 
 - `farnsworth.russell.wisc.edu`
 
-###### Workstation Servers (Processing)
+##### Workstation Servers (Processing)
 
 - `krusty.russell.wisc.edu`
 - `uwspex.russell.wisc.edu`
 
-**CHTC Servers**
+#### CHTC Servers
 
-###### Transfer Server
+##### Transfer Server
 
 - `transfer.chtc.wisc.edu`
 
-###### Submit Servers
+##### Submit Servers
 
 - `townsend-ap2000.chtc.wisc.edu`
 - `ap2001.chtc.wisc.edu`
@@ -595,6 +595,7 @@ Prior to running the BRDF workflow, the processed reflectance files should be st
 
 > ***NOTE:** The instructions in this section **only need to be followed once** to set up your workspace on a particular submit server.*
 
+<!-- -->
 > ***NOTE:** Before running these commands, first log in to `townsend-ap2000.chtc.wisc.edu` (or your submit server of choice).*
 
 #### Setting up your user space on the submit server
