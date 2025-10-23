@@ -29,7 +29,7 @@ For single processing runs, or tasks that do not fit neatly into the batch LUT g
    ```shell
    condor_submit -i source/libradtran/apptainer/build.sub
    ```
-   
+
    > **NOTE:** You can also submit from e.g. your user home directory by specifying `initialdir`, e.g.
    >
    > ```shell
@@ -41,7 +41,7 @@ For single processing runs, or tasks that do not fit neatly into the batch LUT g
 
 3. Wait for the remote session to start.
 
-4. Build the container image on the worker node. This may take some time.
+4. Build the container image on the worker node. This may take some time (approx. 20 minutes).
 
      ```shell
      apptainer build libradtran.sif libradtran.def > build.log 2>&1
@@ -50,9 +50,9 @@ For single processing runs, or tasks that do not fit neatly into the batch LUT g
 5. Generate container metadata.
 
    ```shell
-   bash version.sh
+   bash metadata.sh
    ```
-   
+
 6. Clean up & transfer outputs.
 
    - Fetch the checksum hashes for the container & definition file:
@@ -82,7 +82,7 @@ For single processing runs, or tasks that do not fit neatly into the batch LUT g
      cp build.log $OUTPUT_DIR/$BASENAME.log
      cp versions.json $OUTPUT_DIR/$BASENAME.json
      ```
-   
+
    - Finally, exit the job:
 
      ```shell
