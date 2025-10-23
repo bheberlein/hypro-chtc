@@ -41,7 +41,7 @@ For single processing runs, or tasks that do not fit neatly into the batch LUT g
 
 3. Wait for the remote session to start.
 
-4. Build the container image on the worker node. This may take some time (approx. 20 minutes).
+4. Build the container image on the worker node. This may take some time (approx. 10 – 20 minutes).
 
      ```shell
      apptainer build libradtran.sif libradtran.def > build.log 2>&1
