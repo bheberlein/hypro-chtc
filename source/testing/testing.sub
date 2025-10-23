@@ -11,10 +11,10 @@ executable = source/testing/testing.sh
 environment = CONDOR_JOB_ID=$(Cluster).$(Process)
 
 # Set files to capture log & standard error stream
-log = /home/$ENV(USER)/logs/test/testing_$(Cluster).log
-error = /home/$ENV(USER)/logs/test/testing_$(Cluster).err
+log = $ENV(HOME)/logs/test/testing_$(Cluster).log
+error = $ENV(HOME)/logs/test/testing_$(Cluster).err
 
-transfer_input_files = utils
+transfer_input_files = $ENV(HOME)/git/hypro-chtc/utils
 
 request_cpus = 1
 request_disk = $(disk)

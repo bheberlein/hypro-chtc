@@ -6,12 +6,12 @@ executable = source/brdf/brdf.sh
 arguments = $(session)
 
 # Set files to capture HTCondor log & standard error stream
-logs_directory = /home/$ENV(USER)/logs/brdf/$(session)
+logs_directory = $ENV(HOME)/logs/brdf/$(session)
 log = $(logs_directory)/BRDF_$(Cluster).log
 error = $(logs_directory)/BRDF_$(Cluster).err
 
 # Copy over bash utilities to worker node
-transfer_input_files = utils
+transfer_input_files = $ENV(HOME)/git/hypro-chtc/utils
 
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT

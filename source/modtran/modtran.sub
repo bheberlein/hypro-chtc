@@ -8,12 +8,12 @@ executable = source/modtran/modtran.sh
 concurrency_limits = MODTRAN:4
 
 # Set files to capture HTCondor log & standard error stream
-logs_directory = /home/$ENV(USER)/logs/modtran
+logs_directory = $ENV(HOME)/logs/modtran
 log = $(logs_directory)/MODTRAN_$(Cluster).log
 error = $(logs_directory)/MODTRAN_$(Cluster).err
 
 # Copy over bash utilities to worker node
-transfer_input_files = utils
+transfer_input_files = $ENV(HOME)/git/hypro-chtc/utils
 
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
