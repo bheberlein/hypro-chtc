@@ -26,6 +26,7 @@ conda_build () {
 }
 
 conda_setup () {
+  # NOTE: User should define `ENVNAME`, `STAGING`
   # Resolve environment package & directory
   [[ -z "${ENVDIR+x}" ]] && ENVDIR=$ENVNAME
   [[ -z "${ENVTAR+x}" ]] && ENVTAR=$ENVNAME.tar.gz
