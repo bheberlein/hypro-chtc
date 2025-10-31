@@ -13,7 +13,7 @@ log = $(logs_directory)/MODTRAN_$(Cluster).log
 error = $(logs_directory)/MODTRAN_$(Cluster).err
 
 # Copy over bash utilities to worker node
-transfer_input_files = $ENV(HOME)/git/hypro-chtc/utils
+transfer_input_files = $ENV(HOME)/utils
 
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT

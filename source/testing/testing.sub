@@ -14,7 +14,7 @@ environment = CONDOR_JOB_ID=$(Cluster).$(Process)
 log = $ENV(HOME)/logs/test/testing_$(Cluster).log
 error = $ENV(HOME)/logs/test/testing_$(Cluster).err
 
-transfer_input_files = $ENV(HOME)/git/hypro-chtc/utils
+transfer_input_files = $ENV(HOME)/utils
 
 request_cpus = 1
 request_disk = $(disk)
