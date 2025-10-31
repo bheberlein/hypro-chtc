@@ -17,9 +17,6 @@ when_to_transfer_output = ON_EXIT
 
 request_memory = $(memory:1GB)
 request_disk = $(disk:1GB)
-
-if !defined request_cpus
-   request_cpus = 1
-endif
+request_cpus = $(cpus:1)
 
 queue
