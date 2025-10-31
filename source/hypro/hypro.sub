@@ -18,7 +18,7 @@ log = $(logs_directory)/HyPro_$(Cluster)_$(flightline).log
 error = $(logs_directory)/HyPro_$(Cluster)_$(flightline).err
 
 # Copy over bash utilities to worker node
-transfer_input_files = $ENV(HOME)/utils
+transfer_input_files = $ENV(CHTC_REPO)/utils
 
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
