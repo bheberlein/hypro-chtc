@@ -3,7 +3,7 @@
 conda_install () {
   system=$(uname -s)
   architecture=$(uname -m)
-  conda_dir=~/conda
+  conda_dir=$(pwd)/conda
   conda_repo=https://repo.anaconda.com/miniconda
   conda_installer=$conda_repo/Miniconda3-latest-${system}-${architecture}.sh
   wget $conda_installer -O conda.sh
