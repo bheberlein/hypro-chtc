@@ -4,8 +4,10 @@
 cat $CHTC_REPO/files/shell/.bashrc >> ~/.bashrc
 
 # Install Miniconda
-. $CHTC_REPO/utils/conda.sh
-conda_install
+(
+  . $CHTC_REPO/utils/conda.sh
+  conda_install
+)
 
 # Create directory structure
 mkdir -p ~/logs/{hypro,brdf,test}
