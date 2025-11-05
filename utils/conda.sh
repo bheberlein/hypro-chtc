@@ -10,6 +10,8 @@ conda_install () {
   sh conda.sh -b -p $conda_dir
   rm conda.sh
   $conda_dir/condabin/conda init
+  # NOTE: To use the prepared environment immediately, run
+  # > . conda/etc/profile.d/conda.sh && conda activate
 }
 
 conda_build () {
@@ -20,7 +22,7 @@ conda_build () {
   # Switch to base environment
   conda activate base
   # Install `conda-pack`, if needed
-  conda install -S -c conda-forge conda-pack
+  conda install -y -S -c conda-forge conda-pack
   # Package the environment for deployment
   conda pack -n $1 -o $1.tar.gz
 }
