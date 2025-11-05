@@ -1,0 +1,13 @@
+name: impute
+channels:
+  - conda-forge
+dependencies:
+  - fancyimpute
+  - gdal
+  - matplotlib
+  - numba
+  - numpy
+  - python
+  - scikit-learn
+  - scipy
+  - toml

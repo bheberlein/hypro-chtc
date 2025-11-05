@@ -9,7 +9,7 @@ basename = $(site)_$(date)
 flightline = $(basename)_$(line)
 
 # Specify executable
-executable = source/hypro/hypro.sh
+executable = $ENV(CHTC_REPO)/source/hypro/hypro.sh
 arguments = $(site) $(date) $(line)
 
 # Set files to capture HTCondor log & standard error stream
