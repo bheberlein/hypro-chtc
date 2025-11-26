@@ -20,7 +20,7 @@ when_to_transfer_output = ON_EXIT
 
 request_cpus = 1
 request_disk = 35GB
-request_memory = 20GB
+request_memory = 30GB
 
 if defined threshold
    arguments=$(arguments) $(threshold)
