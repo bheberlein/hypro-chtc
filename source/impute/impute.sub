@@ -23,7 +23,11 @@ request_disk = 35GB
 request_memory = 30GB
 
 if defined threshold
-   arguments=$(arguments) $(threshold)
+   arguments=$(arguments) --threshold $(threshold)
+endif
+
+if !$(ransac:0)
+      arguments=$(arguments) --no-ransac
 endif
 
 queue

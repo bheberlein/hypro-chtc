@@ -22,12 +22,11 @@ mkdir -p data/raw output/rdn
 
 # Resolve command-line arguments
 BASENAME=$1
-THRESHOLD=${2:-"0.10"}
 SENSOR=VNIR_1800_SN00840_FOVx2
 
 cp $STAGING/data/imputed/input/${BASENAME}_${SENSOR}_raw.* data/raw/
 
-python -m enspec.processing.workflows.impute --name $BASENAME --threshold $THRESHOLD
+python -m enspec.processing.workflows.impute --name $BASENAME ${@:2}
 
 OUTPUT_DIRECTORY=$STAGING/data/imputed/output
 mkdir -p $OUTPUT_DIRECTORY/$BASENAME
