@@ -30,4 +30,8 @@ if !$(ransac:0)
       arguments=$(arguments) --no-ransac
 endif
 
+if defined precomputed
+    environment = "PRECOMPUTED_RADIANCE=$(precomputed)"
+endif
+
 queue

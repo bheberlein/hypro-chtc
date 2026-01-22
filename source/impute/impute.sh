@@ -26,7 +26,12 @@ SENSOR=VNIR_1800_SN00840_FOVx2
 
 cp $STAGING/data/imputed/input/${BASENAME}_${SENSOR}_raw.* data/raw/
 
-python -m enspec.processing.workflows.impute --name $BASENAME ${@:2}
+OPTIONS=${@:2}
+if [[ -v PRECOMPUTED_RADIANCE ]]; then
+  OPTIONS=$OPTIONS --precomputed $PRECOMPUTED_RADIANCE
+fi
+
+python -m enspec.processing.workflows.impute --name $BASENAME $OPTIONS
 
 OUTPUT_DIRECTORY=$STAGING/data/imputed/output
 mkdir -p $OUTPUT_DIRECTORY/$BASENAME
