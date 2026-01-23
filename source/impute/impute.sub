@@ -7,6 +7,13 @@ requirements = (TARGET.OpSysMajorVer >= 8) && (TARGET.HasCHTCStaging == TRUE)
 executable = $ENV(CHTC_REPO)/source/impute/impute.sh
 arguments = $(basename)
 
+# Handle optional command-line arguments from `condor_submit`
+include : ../arguments/optional.sh --threshold threshold |
+include : ../arguments/optional.sh --ftest lambda |
+include : ../arguments/optional.sh --count frames |
+include : ../arguments/optional.sh --precomputed precomputed |
+include : ../arguments/unflag.sh --no-ransac ransac |
+
 # Set files to capture HTCondor log & standard error stream
 logs_directory = $ENV(HOME)/logs/impute/$(basename)
 log = $(logs_directory)/Impute_$(Cluster)_$(basename).log
@@ -21,17 +28,5 @@ when_to_transfer_output = ON_EXIT
 request_cpus = 1
 request_disk = 35GB
 request_memory = 30GB
-
-if defined threshold
-   arguments=$(arguments) --threshold $(threshold)
-endif
-
-if !$(ransac:0)
-      arguments=$(arguments) --no-ransac
-endif
-
-if defined precomputed
-    environment = "PRECOMPUTED_RADIANCE=$(precomputed)"
-endif
 
 queue
