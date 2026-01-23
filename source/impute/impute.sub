@@ -8,11 +8,11 @@ executable = $ENV(CHTC_REPO)/source/impute/impute.sh
 arguments = $(basename)
 
 # Handle optional command-line arguments from `condor_submit`
-include : ../arguments/optional.sh --threshold threshold |
-include : ../arguments/optional.sh --ftest lambda |
-include : ../arguments/optional.sh --count frames |
-include : ../arguments/optional.sh --precomputed precomputed |
-include : ../arguments/unflag.sh --no-ransac ransac |
+include : $ENV(CHTC_REPO)/arguments/optional.sh --threshold threshold |
+include : $ENV(CHTC_REPO)/arguments/optional.sh --ftest lambda |
+include : $ENV(CHTC_REPO)/arguments/optional.sh --count frames |
+include : $ENV(CHTC_REPO)/arguments/optional.sh --precomputed precomputed |
+include : $ENV(CHTC_REPO)/arguments/unflag.sh --no-ransac ransac |
 
 # Set files to capture HTCondor log & standard error stream
 logs_directory = $ENV(HOME)/logs/impute/$(basename)
