@@ -9,7 +9,7 @@ arguments = $(basename)
 
 # Handle optional command-line arguments from `condor_submit`
 include : $ENV(CHTC_REPO)/arguments/optional.sh --threshold threshold |
-include : $ENV(CHTC_REPO)/arguments/optional.sh --ftest lambda |
+include : $ENV(CHTC_REPO)/arguments/optional.sh --ftest alpha |
 include : $ENV(CHTC_REPO)/arguments/optional.sh --count frames |
 include : $ENV(CHTC_REPO)/arguments/optional.sh --precomputed precomputed |
 include : $ENV(CHTC_REPO)/arguments/unflag.sh --no-ransac ransac |
