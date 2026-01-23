@@ -12,8 +12,11 @@ include : $ENV(CHTC_REPO)/arguments/optional.sh --threshold threshold |
 include : $ENV(CHTC_REPO)/arguments/optional.sh --ftest alpha |
 include : $ENV(CHTC_REPO)/arguments/optional.sh --count frames |
 include : $ENV(CHTC_REPO)/arguments/optional.sh --precomputed precomputed |
-include : $ENV(CHTC_REPO)/arguments/optional.sh --output output |
 include : $ENV(CHTC_REPO)/arguments/unflag.sh --no-ransac ransac |
+
+if defined output
+    environment = "OUTPUT_DIRECTORY=$(output)"
+endif
 
 # Set files to capture HTCondor log & standard error stream
 logs_directory = $ENV(HOME)/logs/impute/$(basename)

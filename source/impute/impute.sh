@@ -28,6 +28,9 @@ cp $STAGING/data/imputed/input/${BASENAME}_${SENSOR}_raw.* data/raw/
 
 python -m enspec.processing.workflows.impute --name $BASENAME ${@:2}
 
-OUTPUT_DIRECTORY=$STAGING/data/imputed/output
+if [[ ! -v OUTPUT_DIRECTORY ]]; then
+  OUTPUT_DIRECTORY=$STAGING/data/imputed/output
+fi
+
 mkdir -p $OUTPUT_DIRECTORY/$BASENAME
 cp -r output/* $OUTPUT_DIRECTORY/$BASENAME/
