@@ -7,3 +7,5 @@ export CHTC_REPO=$HOME/git/hypro-chtc
 source $CHTC_REPO/utils/htcondor.sh
 
 export ENSPEC_REPO=$HOME/git/enspec
+
+SRC=$CHTC_REPO/source
