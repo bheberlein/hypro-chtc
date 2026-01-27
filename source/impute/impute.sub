@@ -14,8 +14,9 @@ include : $ENV(CHTC_REPO)/arguments/optional.sh --count frames |
 include : $ENV(CHTC_REPO)/arguments/optional.sh --precomputed precomputed |
 include : $ENV(CHTC_REPO)/arguments/unflag.sh --no-ransac ransac |
 
-if defined output
-    environment = "OUTPUT_DIRECTORY=$(output)"
+if defined out
+    # NOTE: `output` is an HTCondor Submit command
+    environment = "OUTPUT_DIRECTORY=$(out)"
 endif
 
 # Set files to capture HTCondor log & standard error stream
