@@ -34,3 +34,5 @@ fi
 
 mkdir -p $OUTPUT_DIRECTORY/$BASENAME
 cp -r output/* $OUTPUT_DIRECTORY/$BASENAME/
+
+rm -r $ENVDIR/ src/ data/ output/
