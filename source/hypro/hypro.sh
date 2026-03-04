@@ -69,6 +69,9 @@ if [ ! -f ${RAW_INPUT} ]; then echo "Raw inputs not found!"; exit 1; fi
 # Copy over input data
 cp $RAW_INPUT data/ && unpack data/"${RAW_INPUT##*/}" -C data
 
+# Handle precomputed intermediates
+[[ -d data/output ]] && mv data/output/* output/ && rm -r data/output
+
 # Resolve processing configuration file
 # NOTE: Takes the first file found from
 #  1. PROJECT_Config.json
