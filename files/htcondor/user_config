@@ -1,0 +1,2 @@
+SCHEDD_HOST = townsend-ap2000.chtc.wisc.edu
+COLLECTOR_HOST = cm.chtc.wisc.edu
