@@ -5,8 +5,10 @@ universe = vanilla
 # IMPORTANT! Require execute servers that have access to Staging
 requirements = (TARGET.OpSysMajorVer >= 8) && (TARGET.HasCHTCStaging == TRUE)
 
+# TODO: Pass environment variables to sub-DAGs?
+
 # Specify executable
-executable = $ENV(CHTC_REPO)/source/libradtran/merge/merge.sh
+executable = git/hypro-chtc/source/libradtran/merge/merge.sh
 arguments = $(tile)
 
 # Set files to capture HTCondor log & standard error stream
@@ -15,7 +17,7 @@ error = logs/lut/merge_$(tile)_$(Cluster).err
 output = logs/lut/merge_$(tile)_$(Cluster).out
 
 # Copy over bash utilities to worker node
-transfer_input_files = $ENV(CHTC_REPO)/utils, $ENV(ENSPEC_REPO)/src
+transfer_input_files = git/hypro-chtc/utils, git/enspec/src
 
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
