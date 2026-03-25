@@ -30,10 +30,10 @@ conda_build () {
 conda_setup () {
   # NOTE: User should define `ENVNAME`, `STAGING`
   # Resolve environment package & directory
-  [[ -z "${ENVDIR+x}" ]] && ENVDIR=$ENVNAME
-  [[ -z "${ENVTAR+x}" ]] && ENVTAR=$ENVNAME.tar.gz
+  [[ ! -v ENVDIR ]] && ENVDIR=$ENVNAME
+  [[ ! -v ENVTAR ]] && ENVTAR=$ENVNAME.tar.gz
   # Resolve environment source directory
-  [[ -z "${SOURCE_DIR+x}"  ]] && SOURCE_DIR=$STAGING/source/environment
+  [[ ! -v SOURCE_DIR  ]] && SOURCE_DIR=$STAGING/source/environment
   # Copy over Miniconda/Python environment
   cp $SOURCE_DIR/$ENVTAR ./
   # Unpack environment files
