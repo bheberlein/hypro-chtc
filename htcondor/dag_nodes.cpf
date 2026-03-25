@@ -1,0 +1,13 @@
+# dag_nodes.cpf
+SELECT NOTITLE
+   ClusterId        AS " JOB_ID" WIDTH 6
+   ProcId           AS " " NOPREFIX PRINTF ".%03d"
+   DAGManJobId      AS "  DAG" WIDTH 6
+   DAGNodeName      AS "  NODE" WIDTH 18
+   DAGNodeCategory  AS "  CAT" WIDTH 12
+   JobStatus        AS "@" WIDTH 3 PRINTAS JOB_STATUS
+   RemoteUserCpu    AS "  RUN_TIME" WIDTH 11 PRINTAS CPU_TIME
+   RequestMemory    AS "  MEM_REQ" WIDTH 10 PRINTAS READABLE_MB
+   MemoryUsage      AS "  MEM_USG" WIDTH 10 PRINTAS READABLE_MB
+   Cmd              AS CMD PRINTAS JOB_DESCRIPTION
+SUMMARY STANDARD

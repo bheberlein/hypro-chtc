@@ -1,0 +1,14 @@
+# dag.cpf
+SELECT NOTITLE
+   ClusterId        AS " DAG_ID" WIDTH 6
+   ProcId           AS " " NOPREFIX PRINTF ".%03d"
+   JobStatus        AS "@" WIDTH 3 PRINTAS JOB_STATUS
+   DAG_NodesTotal   AS "  TOT" WIDTH 5
+   DAG_NodesDone    AS "  DONE" WIDTH 6
+   DAG_NodesFailed  AS "  FAIL" WIDTH 6
+   DAG_NodesReady   AS "  READY" WIDTH 6
+   DAG_JobsRunning  AS "  RUN" WIDTH 5
+   DAG_JobsHeld     AS "  HOLD" WIDTH 6
+   DAG_JobsIdle     AS "  IDLE" WIDTH 6
+   Cmd              AS CMD PRINTAS JOB_DESCRIPTION
+SUMMARY STANDARD
