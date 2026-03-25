@@ -1,6 +1,11 @@
 # libradtran.sub
 universe = container
 
+# LUT tile basename
+base = $Fn(inp)
+# Set tile basename as job categorical label
++Category = "RTM:$(base)"
+
 # NOTE: Files in shared Staging spaces cannot be transferred with `osdf:///` protocol; use `file:///`
 staging = /staging/groups/townsend_airborne
 output_directory = $(staging)/data/lut/raw
@@ -12,7 +17,6 @@ requirements = (TARGET.HasCHTCStaging == TRUE)
 container_image = file://$(staging)/source/libradtran/libradtran.sif
 
 # Inputs & outputs
-base = $Fn(inp)
 input = $(inp)
 output = $(output_directory)/$(base).out
 error = $(output_directory)/$(base).err
