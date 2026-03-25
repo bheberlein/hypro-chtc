@@ -1,5 +1,6 @@
 # merge.sub
 universe = vanilla
++Category = "MergeLUT:$(tile)"
 
 # IMPORTANT! Require execute servers that have access to Staging
 requirements = (TARGET.OpSysMajorVer >= 8) && (TARGET.HasCHTCStaging == TRUE)
@@ -21,6 +22,6 @@ when_to_transfer_output = ON_EXIT
 
 request_cpus = 1
 request_disk = 15GB
-request_memory = 3GB
+request_memory = 4GB
 
 queue
