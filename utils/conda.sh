@@ -44,6 +44,8 @@ conda_setup () {
   export PATH=$(pwd)/$ENVDIR:$(pwd)/$ENVDIR/lib:$(pwd)/$ENVDIR/share:$PATH
   # Activate the conda environment
   . $ENVDIR/bin/activate
+  # Localize hardcoded library filepaths
+  $ENVDIR/bin/conda-unpack
 }
 
 conda_reboot () {
