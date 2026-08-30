@@ -19,9 +19,8 @@ conda_build () {
   conda env create -f $2
   # Clean up unnecessary files
   conda clean -afy
-  # Switch to base environment
+  # Install `conda-pack` in the base environment, if needed
   conda activate base
-  # Install `conda-pack`, if needed
   conda install -y -S -c conda-forge conda-pack
   # Package the environment for deployment
   conda pack -n $1 -o $1.tar.gz
@@ -29,7 +28,9 @@ conda_build () {
 
 conda_setup () {
   # NOTE: User should define `ENVNAME`, `STAGING`
-  # Resolve environment package & directory
+  : "${ENVNAME:?Error: ENVNAME is not set.}" || return 1
+  : "${STAGING:?Error: STAGING is not set.}" || return 1
+  # Resolve environment local directory & source package
   [[ ! -v ENVDIR ]] && ENVDIR=$ENVNAME
   [[ ! -v ENVTAR ]] && ENVTAR=$ENVNAME.tar.gz
   # Resolve environment source directory
@@ -37,7 +38,7 @@ conda_setup () {
   # Copy over Miniconda/Python environment
   cp $SOURCE_DIR/$ENVTAR ./
   # Unpack environment files
-  mkdir $ENVDIR
+  mkdir -p $ENVDIR
   tar -xzf $ENVTAR -C $ENVDIR
   rm $ENVTAR
   # Update system path
@@ -60,15 +61,19 @@ conda_reboot () {
 }
 
 make_importable () {
-  # Get Python major & minor version number
-  if [[ -z "${PYTHON_VERSION+x}" ]]; then
-    PYTHON_VERSION=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
-    echo "Got Python version: $PYTHON_VERSION"
-  fi
+  # Resolve `site-packages` directory for active Python installation
+  SITE=$(python -c "import site; print(site.getsitepackages()[0])")
   # Resolve conda `.pth` file path
-  PTH_FILE=$ENVDIR/lib/python${PYTHON_VERSION}/site-packages/conda.pth
+  PTH_FILE=${SITE}/conda.pth
   # Make code importable from packages within the input directory
   for p in "$@"; do
     echo $p >> $PTH_FILE
   done
+  # NOTE: This is functionally similar to `pip install -e`, without
+  #  package management overhead (e.g. installing dependencies)
+}
+
+from_yml () {
+  # Shorthand to build a Conda environment from a YML file
+  conda env create -f $1
 }
