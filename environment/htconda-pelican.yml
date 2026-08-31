@@ -1,0 +1,23 @@
+name: htconda-pelican
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python >= 3.8, < 3.10 | > 3.11, < 3.14
+  - gdal >= 3.3
+  - numpy >= 1.20
+  - matplotlib
+  - pandas
+  - scipy >= 1.7
+  - numba
+  - shapely
+  - arosics
+  - lxml
+  - toml
+  - pydantic
+  - pip
+  - idna[pelican]
+  - fsspec[pelican]
+  - python-htcondor[chtc]
+  - pip:
+    - pelicanfs[pelican]

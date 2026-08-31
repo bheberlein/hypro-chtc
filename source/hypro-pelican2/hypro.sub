@@ -1,0 +1,47 @@
+# hypro.sub
+universe = vanilla
+
+# IMPORTANT! Require execute servers that have access to Staging
+requirements = (TARGET.OpSysMajorVer >= 8) && (TARGET.HasCHTCStaging == TRUE)
+
+# Specify executable
+executable = $ENV(CHTC_REPO)/source/hypro-pelican2/hypro.sh
+
+arguments  = --date $(flight_date) \
+             --site-code $(site_code) \
+             --project-code $(project_code) \
+             --project-name '$(project_name)' \
+             --image-number $(image_number) \
+             --line-number $(line_number) \
+             --swir-pixel-size $(swir_pixel_size)
+
+if defined site_name
+   arguments=$(arguments) --site-name '$(site_name)'
+
+if defined raw_basename
+   arguments=$(arguments) --raw-basename $(raw_basename)
+
+if defined target_sampling
+   arguments=$(arguments) --target-sampling $(target_sampling)
+
+if defined vdatum
+   arguments=$(arguments) --vdatum $(vdatum)
+
+# Set files to capture HTCondor log & standard error stream
+logs_directory = $ENV(HOME)/logs/hypro-pelican/$(site_code)_$(flight_date)
+log = $(logs_directory)/HyPro_$(Cluster)_$(site_code)_$(flight_date)_$(line_number).log
+error = $(logs_directory)/HyPro_$(Cluster)_$(site_code)_$(flight_date)_$(line_number).err
+
+# Copy over bash utilities to worker node
+transfer_input_files = $ENV(CHTC_REPO)/utils, \
+                       $ENV(ENSPEC_REPO)/src, \
+                       $ENV(CHTC_REPO)/source/hypro-pelican2/deploy.py
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+request_cpus = 1
+request_disk = $(disk)
+request_memory = $(memory)
+
+queue
