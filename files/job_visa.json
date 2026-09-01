@@ -1,0 +1,76 @@
+{
+  "metadata": {
+    "project": null,
+    "site": {
+      "name": null,
+      "code": null,
+      "elevation": {
+        "min": null,
+        "max": null,
+        "avg": null,
+        "std": null
+      }
+    },
+    "acquisition": {
+      "altitude": {
+        "target": null,
+        "avg": null,
+        "std": null
+      },
+      "groundspeed": {
+        "target": null,
+        "avg": null,
+        "std": null
+      },
+      "heading": null
+    }
+  },
+  "database": {
+    "flight_id":  null,
+    "session_id":  null,
+    "line_id":  null,
+    "image_number": null,
+    "line_number": null
+  },
+  "naming": {
+    "input_basename": "FLIGHT_20240624_15",
+    "output_basename": "LAKE_20240624_15"
+  },
+  "files": [
+
+  ],
+  "processing": {
+    "run": {
+      "id": null,
+      "owner": null
+    },
+    "parameters": {
+      "pixel_size": {
+        "target": null,
+        "min": null,
+        "max": null,
+        "avg": null,
+        "std": null
+      },
+      "target_sampling": "highest",
+      "surface_model": null,
+      "roi": null
+    },
+    "software_version": {
+      "hypro": null,
+      "enspec": null
+    },
+    "timeline": {
+      "prepared": null,
+      "submitted": null,
+      "start_time":  null,
+      "finish_time":  null,
+      "runtime": null,
+      "status": null
+    }
+  },
+  "outputs": {
+    "keep_raw": true,
+    "keep_radiance": true
+  }
+}
