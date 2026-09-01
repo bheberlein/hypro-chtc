@@ -50,3 +50,17 @@ resolve_config () {
   echo "Using processing configuration: $CONFIG_DIR/$CONFIG"
   return 0
 }
+
+load_config () {
+  # Resolve processing configuration file
+  # TODO: Maybe PROJECT should take lowest priority?
+  # NOTE: Takes the first file found from
+  #  1. PROJECT_Config.json
+  #  2. SITE_YYYYMMDD/SITE_YYYYMMDD_XX_Config.json
+  #  3. SITE_YYYYMMDD_Config.json
+  #  4. SITE_YYYY_Config.json
+  source utils/hypro/config.sh
+  resolve_config || return 1
+  # Copy over JSON configuration file (strip out leading directories if present)
+  cp $CONFIG_DIR/$CONFIG data/"${CONFIG##*/}"
+}
