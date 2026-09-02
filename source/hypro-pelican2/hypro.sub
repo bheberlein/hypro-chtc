@@ -10,13 +10,15 @@ executable = $ENV(CHTC_REPO)/source/hypro-pelican2/hypro.sh
 arguments  = --date $(flight_date) \
              --site-code $(site_code) \
              --project-code $(project_code) \
-             --project-name '$(project_name)' \
+             --project-name $(project_name) \
              --image-number $(image_number) \
              --line-number $(line_number) \
              --swir-pixel-size $(swir_pixel_size)
 
+# TODO: Spaces in site & project names; tried escaped double quotes (`\"`) but then the output directory has quotes in its name...
+
 if defined site_name
-   arguments=$(arguments) --site-name '$(site_name)'
+   arguments=$(arguments) --site-name $(site_name)
 
 if defined raw_basename
    arguments=$(arguments) --raw-basename $(raw_basename)
