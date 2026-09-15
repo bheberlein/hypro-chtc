@@ -29,6 +29,9 @@ if defined target_sampling
 if defined vdatum
    arguments=$(arguments) --vdatum $(vdatum)
 
+if defined dem
+   arguments=$(arguments) --dem $(dem)
+
 # Set files to capture HTCondor log & standard error stream
 logs_directory = $ENV(HOME)/logs/hypro-pelican/$(site_code)_$(flight_date)
 log = $(logs_directory)/HyPro_$(Cluster)_$(site_code)_$(flight_date)_$(line_number).log

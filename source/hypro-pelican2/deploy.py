@@ -12,6 +12,8 @@ DEFAULT_NAMESPACE = 'fwe/townsend/Enspec'
 RAW_DATA_SOURCE_DIRECTORY = Path('data/collection/airborne/raw')
 DEM_DATA_SOURCE_DIRECTORY = Path('library/sites/SurfaceModels/hyspex_dems')
 
+DEFAULT_DEM_FILE = DEM_DATA_SOURCE_DIRECTORY / 'WI_Statewide_DEM/WI_DEM_HAE_32616_10m'
+
 STAGING = Path('/staging/groups/townsend_airborne')
 print(f'{STAGING.exists() = }')
 
@@ -98,7 +100,7 @@ class HyProDeployment(Deployment):
             # except:
             #     pass
     
-    def get_surface_model(self, working_path=None):
+    def get_surface_model(self, relpath=None, working_path=None):
         
         working_path = working_path or self.working_path
         local_data_directory = working_path / 'data'
@@ -106,9 +108,14 @@ class HyProDeployment(Deployment):
         
         # dem_directory = staging / 'data/surface'
         
-        remote_dem_directory = Path('library/sites/SurfaceModels/hyspex_dems')
-        dem_source = remote_dem_directory / 'WI_Statewide_DEM/WI_DEM_HAE_32616_10m'
-        dem_file = local_data_directory / dem_source.relative_to(remote_dem_directory)
+        if relpath is None:
+            # Use default DEM
+            dem_source = DEFAULT_DEM_FILE
+            relpath = dem_source.relative_to(DEM_DATA_SOURCE_DIRECTORY)
+        else:
+            dem_source = DEM_DATA_SOURCE_DIRECTORY / relpath
+        
+        dem_file = local_data_directory / relpath
         
         # TODO: Clip access window
         
@@ -161,13 +168,12 @@ class HyProDeployment(Deployment):
     def cleanup(self):
         pass
     
-    def run(self, hyspex_files, **options):
+    def run(self, hyspex_files, dem_path=None, **options):
         
         # Copy HySpex images & navigation data
         self.get_hyspex_inputs(hyspex_files)
         # Copy surface elevation model
-        # TODO: Specify input DEM
-        dem_file = self.get_surface_model()
+        dem_file = self.get_surface_model(relpath=dem_path)
         
         from hypro.workflow.main import main as run_hypro
         
@@ -231,7 +237,8 @@ def list_input_batches(target_directory, raw_basename, nice_basename, date,
 
 def main(site_code, flight_date, image_number, line_number, swir_pixel_size,
          raw_basename='FLIGHT', vdatum='ellipsoid', target_sampling='highest',
-         site_name=None, project_code=None, project_name=None, local_data_directory=None):
+         site_name=None, project_code=None, project_name=None,
+         dem_path=None, local_data_directory=None):
     
     isodate = flight_date.strftime('%Y%m%d')
     
@@ -248,7 +255,10 @@ def main(site_code, flight_date, image_number, line_number, swir_pixel_size,
         site_name=site_name, project_code=project_code, project_name=project_name,
     )
     
-    job.run(files, swir_pixel_size=swir_pixel_size, target_sampling=target_sampling)
+    job.run(files,
+            dem_path=dem_path,
+            swir_pixel_size=swir_pixel_size,
+            target_sampling=target_sampling)
 
 
 if __name__ == '__main__':
@@ -274,6 +284,8 @@ if __name__ == '__main__':
     parser.add_argument('--swir-pixel-size', type=float, required=True)
     parser.add_argument('--target-sampling', type=str, default='highest')
     
+    parser.add_argument('--dem', type=str, default=None)
+    
     parser.add_argument('--vdatum', type=str, default='ellipsoid')
     
     args = parser.parse_args()
@@ -297,5 +309,6 @@ if __name__ == '__main__':
         site_name=args.site_name,
         project_code=args.project_code,
         project_name=args.project_name,
+        dem_path=args.dem,
         local_data_directory=local_data_directory
     )
