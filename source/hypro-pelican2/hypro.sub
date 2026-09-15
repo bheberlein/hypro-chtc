@@ -19,18 +19,23 @@ arguments  = --date $(flight_date) \
 
 if defined site_name
    arguments=$(arguments) --site-name $(site_name)
+endif
 
 if defined raw_basename
    arguments=$(arguments) --raw-basename $(raw_basename)
+endif
 
 if defined target_sampling
    arguments=$(arguments) --target-sampling $(target_sampling)
+endif
 
 if defined vdatum
    arguments=$(arguments) --vdatum $(vdatum)
+endif
 
 if defined dem
    arguments=$(arguments) --dem $(dem)
+endif
 
 # Set files to capture HTCondor log & standard error stream
 logs_directory = $ENV(HOME)/logs/hypro-pelican/$(site_code)_$(flight_date)
