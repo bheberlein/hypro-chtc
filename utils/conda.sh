@@ -65,8 +65,10 @@ make_importable () {
   SITE=$(python -c "import site; print(site.getsitepackages()[0])")
   # Resolve conda `.pth` file path
   PTH_FILE=${SITE}/conda.pth
+  echo "Using Conda path file: ${PTH_FILE}\nAdding to Conda path:"
   # Make code importable from packages within the input directory
   for p in "$@"; do
+    echo " > $p"
     echo $p >> $PTH_FILE
   done
   # NOTE: This is functionally similar to `pip install -e`, without
