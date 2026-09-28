@@ -152,9 +152,6 @@ class HyProDeployment(Deployment):
         relpath = f'{self.project_name}/{self.date.year}/{self.isodate}/{self.nice_basename}'
         remote_output = f'{remote_processed_dir}/{relpath}'
         
-        # TODO: Test
-        self.remote.fs.mkdir(self.remote.get_remote_url(remote_output))
-        
         # Transfer output directories
         for d in ('merge', 'swir', 'vnir'):
             
