@@ -18,4 +18,7 @@ git clone https://github.com/PelicanPlatform/pelicanfs ./pelicanfs
 source utils/conda.sh
 make_importable pelicanfs/src
 
+python template.py --template sitecustomize.py.jnja --name pelicanfs --path $(pwd)/pelicanfs/src
+mv sitecustomize.py $SITE/sitecustomize.py
+
 python deploy.py "$@"
