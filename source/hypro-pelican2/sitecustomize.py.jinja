@@ -1,0 +1,9 @@
+import sys
+
+{% for package, path in packages.items() %}
+{# Pop the module from memory in case a site setup pre-cached it #}
+sys.modules.pop('{{ package }}', None)
+{# Inject your local path to the front of sys.path #}
+sys.path.insert(0, '{{ path }}')
+
+{% endfor %}

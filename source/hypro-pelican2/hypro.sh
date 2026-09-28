@@ -13,12 +13,14 @@ HYPROTAR=hypro_1.0.1dev7.tar.gz
 source utils/execute.sh
 prepare_workspace && prepare_hypro $HYPROTAR
 
-# Override PIP-installed PelicanFS with latest from GitHub
-git clone https://github.com/PelicanPlatform/pelicanfs ./pelicanfs
 source utils/conda.sh
+
+# Get latest PelicanFS from GitHub
+git clone https://github.com/PelicanPlatform/pelicanfs ./pelicanfs
 make_importable pelicanfs/src
 
-python template.py --template sitecustomize.py.jnja --name pelicanfs --path $(pwd)/pelicanfs/src
+# Override PIP-installed PelicanFS
+python template.py --template sitecustomize.py.jinja --name pelicanfs --path $(pwd)/pelicanfs/src
 mv sitecustomize.py $SITE/sitecustomize.py
 
 python deploy.py "$@"

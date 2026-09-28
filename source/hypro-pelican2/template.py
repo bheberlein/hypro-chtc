@@ -21,7 +21,7 @@ def main(template_file, package, source_dir):
     # Render by passing keyword arguments directly
     output = template.render(package=package, path=source_dir)
     
-    output_file = template_file.with_suffix(template_file.suffix.replace('.jnja', ''))
+    output_file = template_file.with_suffix(template_file.suffix.replace('.jinja', ''))
     
     with open(output_file, mode='w') as f:
         f.write(output)
