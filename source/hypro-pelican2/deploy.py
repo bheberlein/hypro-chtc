@@ -186,7 +186,7 @@ class HyProDeployment(Deployment):
         self.cleanup()
 
 
-def list_input_files(raw_session, nice_session, isodate, image_number, line_number, vdatum):
+def list_input_files(raw_session, nice_session, isodate, image_number, line_number, vdatum, fovexp=False):
     """Generator for raw file list of ``(source, target)`` file names."""
     
     SENSORS = ('SWIR_384_SN3142', 'VNIR_1800_SN00840')
@@ -194,12 +194,16 @@ def list_input_files(raw_session, nice_session, isodate, image_number, line_numb
     def _core_files(name, vdatum):
         return f'{name}.hyspex', f'{name}.hdr', f'nav_{vdatum}/{name}.txt'
     
+    # TODO: Some images have "_FOVx2_raw"
+    
     for sensor in SENSORS:
         
+        tag = f'FOVx2_raw' if fovexp else 'raw'
+        
         # File basename
-        name = f'{raw_session}_{isodate}_{image_number:02d}_{sensor}_raw'
+        name = f'{raw_session}_{isodate}_{image_number:02d}_{sensor}_{tag}'
         # Nicer file naming
-        renamed = f'{nice_session}_{isodate}_{line_number:02d}_{sensor}_raw'
+        renamed = f'{nice_session}_{isodate}_{line_number:02d}_{sensor}_{tag}'
         
         yield from zip(_core_files(name, vdatum), _core_files(renamed, vdatum))
 
@@ -219,7 +223,7 @@ def resolve_input_files(files, source_directory, target_directory):
 
 
 def list_input_batches(target_directory, raw_basename, nice_basename, date,
-                       image_number_first, image_number_last, vdatum='ellipsoid'):
+                       image_number_first, image_number_last, vdatum='ellipsoid', fovexp=False):
     
     session_directory = get_source_directory(raw_basename, date, data_directory=RAW_DATA_SOURCE_DIRECTORY)
     
@@ -228,14 +232,14 @@ def list_input_batches(target_directory, raw_basename, nice_basename, date,
     for i, k in enumerate(range(image_number_first, image_number_last+1)):
         yield resolve_input_files(
             list_input_files(raw_basename, nice_basename, isodate, k, i+1, vdatum),
-            session_directory, target_directory
+            session_directory, target_directory, fovexp=fovexp
         )
 
 
 def main(site_code, flight_date, image_number, line_number, swir_pixel_size,
          raw_basename='FLIGHT', vdatum='ellipsoid', target_sampling='highest',
          site_name=None, project_code=None, project_name=None,
-         dem_path=None, local_data_directory=None):
+         dem_path=None, local_data_directory=None, fovexp=False):
     
     isodate = flight_date.strftime('%Y%m%d')
     
@@ -243,7 +247,7 @@ def main(site_code, flight_date, image_number, line_number, swir_pixel_size,
     session_directory = get_source_directory(raw_basename, flight_date, data_directory=RAW_DATA_SOURCE_DIRECTORY)
     
     # Get source & target names of input files to transfer
-    file_names = list(list_input_files(raw_basename, site_code, isodate, image_number, line_number, vdatum))
+    file_names = list(list_input_files(raw_basename, site_code, isodate, image_number, line_number, vdatum, fovexp=fovexp))
     # Resolve input file source & target paths
     files = resolve_input_files(file_names, session_directory, local_data_directory)
     
