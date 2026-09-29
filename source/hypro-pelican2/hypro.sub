@@ -8,13 +8,14 @@ requirements = (TARGET.HasCHTCStaging == TRUE)
 # Specify executable
 executable = $ENV(CHTC_REPO)/source/$(workflow)2/hypro.sh
 
+# NOTE: Leading whitespace is trimmed from each line
 arguments  = --date $(flight_date) \
- --site-code $(site_code) \
- --project-code $(project_code) \
- --project-name $(project_name) \
- --image-number $(image_number) \
- --line-number $(line_number) \
- --swir-pixel-size $(swir_pixel_size)
+   --site-code $(site_code) \
+   --project-code $(project_code) \
+   --project-name $(project_name) \
+   --image-number $(image_number) \
+   --line-number $(line_number) \
+   --swir-pixel-size $(swir_pixel_size)
 
 # TODO: Spaces in site & project names; tried escaped double quotes (`\"`) but then the output directory has quotes in its name...
 
