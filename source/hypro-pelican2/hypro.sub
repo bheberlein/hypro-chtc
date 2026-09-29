@@ -27,6 +27,10 @@ if defined raw_basename
    arguments=$(arguments) --raw-basename $(raw_basename)
 endif
 
+if defined fovexp
+   arguments=$(arguments) --fovexp $(fovexp)
+endif
+
 if defined target_sampling
    arguments=$(arguments) --target-sampling $(target_sampling)
 endif

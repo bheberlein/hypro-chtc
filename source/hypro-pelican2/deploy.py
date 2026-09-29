@@ -282,6 +282,8 @@ if __name__ == '__main__':
     parser.add_argument('--image-number', type=int, required=True)
     parser.add_argument('--line-number', type=int, required=False, default=None)
     
+    parser.add_argument('--fovexp', type=bool, required=False, default=False)
+    
     parser.add_argument('--swir-pixel-size', type=float, required=True)
     parser.add_argument('--target-sampling', type=str, default='highest')
     
@@ -311,5 +313,6 @@ if __name__ == '__main__':
         project_code=args.project_code,
         project_name=args.project_name,
         dem_path=args.dem,
-        local_data_directory=local_data_directory
+        local_data_directory=local_data_directory,
+        fovexp=args.fovexp,
     )
