@@ -17,7 +17,7 @@ source utils/conda.sh
 
 # Get latest PelicanFS from GitHub
 git clone https://github.com/PelicanPlatform/pelicanfs ./pelicanfs
-make_importable pelicanfs/src
+make_importable $(pwd)/pelicanfs/src
 
 # Override PIP-installed PelicanFS
 python template.py --template sitecustomize.py.jinja --name pelicanfs --path $(pwd)/pelicanfs/src
